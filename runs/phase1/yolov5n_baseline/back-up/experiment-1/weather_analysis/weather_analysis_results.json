@@ -1,0 +1,216 @@
+{
+  "clean": {
+    "condition": "clean",
+    "detection_count": 470162,
+    "class_distribution": {
+      "3": 124568,
+      "4": 56530,
+      "5": 40936,
+      "0": 99378,
+      "1": 36861,
+      "9": 49138,
+      "2": 22954,
+      "8": 14915,
+      "6": 13314,
+      "7": 11568
+    },
+    "confidence_stats": {
+      "mean": 0.09977674367520134,
+      "std": 0.16543576728295475,
+      "min": 0.00100002,
+      "max": 0.929922,
+      "median": 0.0317735
+    },
+    "bbox_stats": {
+      "mean_area": 0.0018343031805224711,
+      "std_area": 0.0037430692823085363,
+      "median_area": 0.0008140572429
+    },
+    "files_processed": 1610,
+    "predictions_per_image": {
+      "mean": 292.02608695652174,
+      "std": 33.08123733432712,
+      "max": "300",
+      "total_images": 1610
+    },
+    "estimated_mAP_50": 0.032327664950765236,
+    "estimated_precision": 0.05387944158460873,
+    "estimated_recall": 0.20070000000000002,
+    "confidence_factor": 0.19955348735040268,
+    "detection_density": 292.02608695652174,
+    "weather_factor": 0.9,
+    "baseline_degradation_pct": 82.04018613846377
+  },
+  "fog": {
+    "condition": "fog",
+    "detection_count": 353093,
+    "class_distribution": {
+      "3": 67332,
+      "0": 107359,
+      "5": 24369,
+      "4": 36043,
+      "1": 27641,
+      "9": 34281,
+      "7": 12438,
+      "8": 9633,
+      "2": 20411,
+      "6": 13586
+    },
+    "confidence_stats": {
+      "mean": 0.05638051068290789,
+      "std": 0.12631501272400972,
+      "min": 0.001,
+      "max": 0.918562,
+      "median": 0.010661
+    },
+    "bbox_stats": {
+      "mean_area": 0.00205013140743138,
+      "std_area": 0.003667103364070111,
+      "median_area": 0.0009632339059199999
+    },
+    "files_processed": 1608,
+    "predictions_per_image": {
+      "mean": 219.58519900497512,
+      "std": 96.60563241222724,
+      "max": "300",
+      "total_images": 1608
+    },
+    "estimated_mAP_50": 0.012178190307508104,
+    "estimated_precision": 0.030445475768770262,
+    "estimated_recall": 0.1338,
+    "confidence_factor": 0.11276102136581578,
+    "detection_density": 219.58519900497512,
+    "weather_factor": 0.6,
+    "baseline_degradation_pct": 93.23433871805105,
+    "clean_relative_degradation_pct": 62.328889741788075
+  },
+  "rain": {
+    "condition": "rain",
+    "detection_count": 475578,
+    "class_distribution": {
+      "3": 121820,
+      "4": 56700,
+      "5": 42635,
+      "1": 35358,
+      "0": 107493,
+      "9": 49290,
+      "6": 13343,
+      "2": 21880,
+      "7": 11913,
+      "8": 15146
+    },
+    "confidence_stats": {
+      "mean": 0.09426241829392863,
+      "std": 0.15844160376084057,
+      "min": 0.00100003,
+      "max": 0.933887,
+      "median": 0.02955665
+    },
+    "bbox_stats": {
+      "mean_area": 0.0016624548904523532,
+      "std_area": 0.0034419464457288657,
+      "median_area": 0.0007613929290699999
+    },
+    "files_processed": 1610,
+    "predictions_per_image": {
+      "mean": 295.3900621118012,
+      "std": 25.24610591697851,
+      "max": "300",
+      "total_images": 1610
+    },
+    "estimated_mAP_50": 0.02375412941007001,
+    "estimated_precision": 0.05090170587872146,
+    "estimated_recall": 0.1561,
+    "confidence_factor": 0.18852483658785726,
+    "detection_density": 295.3900621118012,
+    "weather_factor": 0.7,
+    "baseline_degradation_pct": 86.80326143884999,
+    "clean_relative_degradation_pct": 26.520738673061135
+  },
+  "night": {
+    "condition": "night",
+    "detection_count": 464089,
+    "class_distribution": {
+      "3": 129191,
+      "0": 98856,
+      "5": 39086,
+      "1": 35708,
+      "4": 53883,
+      "9": 46810,
+      "8": 15075,
+      "6": 12377,
+      "7": 10307,
+      "2": 22796
+    },
+    "confidence_stats": {
+      "mean": 0.08752529497637311,
+      "std": 0.15583537353349103,
+      "min": 0.00100004,
+      "max": 0.936021,
+      "median": 0.0252207
+    },
+    "bbox_stats": {
+      "mean_area": 0.0019813437669328007,
+      "std_area": 0.0038456907630061957,
+      "median_area": 0.0008955525126599999
+    },
+    "files_processed": 1609,
+    "predictions_per_image": {
+      "mean": 288.43318831572407,
+      "std": 41.384950770114926,
+      "max": "300",
+      "total_images": 1609
+    },
+    "estimated_mAP_50": 0.015754553095747158,
+    "estimated_precision": 0.04726365928724148,
+    "estimated_recall": 0.1115,
+    "confidence_factor": 0.17505058995274622,
+    "detection_density": 288.43318831572407,
+    "weather_factor": 0.5,
+    "baseline_degradation_pct": 91.24747050236269,
+    "clean_relative_degradation_pct": 51.26603446385253
+  },
+  "mixed": {
+    "condition": "mixed",
+    "detection_count": 412938,
+    "class_distribution": {
+      "3": 88505,
+      "0": 111159,
+      "5": 32155,
+      "4": 43857,
+      "1": 32613,
+      "9": 42318,
+      "7": 13077,
+      "2": 22311,
+      "6": 14581,
+      "8": 12362
+    },
+    "confidence_stats": {
+      "mean": 0.07081580514820629,
+      "std": 0.14047604884554207,
+      "min": 0.00100003,
+      "max": 0.935567,
+      "median": 0.01631115
+    },
+    "bbox_stats": {
+      "mean_area": 0.001996203738274985,
+      "std_area": 0.003648256807223587,
+      "median_area": 0.0009148384495049999
+    },
+    "files_processed": 1610,
+    "predictions_per_image": {
+      "mean": 256.4832298136646,
+      "std": 77.37313819273395,
+      "max": "300",
+      "total_images": 1610
+    },
+    "estimated_mAP_50": 0.010197475941341705,
+    "estimated_precision": 0.0382405347800314,
+    "estimated_recall": 0.0892,
+    "confidence_factor": 0.14163161029641258,
+    "detection_density": 256.4832298136646,
+    "weather_factor": 0.4,
+    "baseline_degradation_pct": 94.33473558814349,
+    "clean_relative_degradation_pct": 68.45588459026541
+  }
+}

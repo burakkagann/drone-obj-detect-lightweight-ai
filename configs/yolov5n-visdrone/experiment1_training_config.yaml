@@ -1,0 +1,114 @@
+# YOLOv5n VisDrone Phase 1 Baseline Training Configuration - Experiment 1
+# ========================================================================
+#
+# Optimized hyperparameter configuration based on recovery analysis findings:
+# - SGD optimizer outperformed AdamW in all tests
+# - Loss weights cls=0.3, obj=0.7 achieved best performance (24.66% mAP@0.5)
+# - Learning rate schedule lr0=0.01, lrf=0.01 optimal for convergence
+# - Zero augmentation strictly enforced for Phase 1 baseline requirement
+# - Fixed batch size 8 for training stability
+#
+# Key Findings Applied:
+# - Run 1 (best performer): 24.66% mAP@0.5 with these exact settings
+# - Typical performance range: 17-19% mAP@0.5 
+# - Best results achieved around epoch 35-40
+# - Configuration validated through multiple experimental runs
+
+# Core Training Parameters
+epochs: 50  # Updated from protocol's 100 based on recovery analysis findings
+batch_size: 8  # Fixed batch size for stability (vs auto-batch)
+
+# Optimizer Configuration (SGD outperformed AdamW)
+optimizer: SGD
+lr0: 0.01          # Initial learning rate (optimal from recovery analysis)
+lrf: 0.01          # Final learning rate factor
+momentum: 0.937    # SGD momentum
+weight_decay: 0.0005  # L2 regularization
+
+# Loss Function Weights (optimal configuration from Run 1)
+cls: 0.3           # Class loss weight (reduced from default 0.5)
+obj: 0.7           # Object loss weight (increased from default 1.0)
+box: 0.05          # Box regression loss weight
+anchor_t: 4.0      # Anchor-multiple threshold
+
+# Learning Rate Schedule
+cos_lr: False      # Cosine learning rate scheduler (disabled)
+warmup_epochs: 3.0 # Warmup epochs
+warmup_momentum: 0.8
+warmup_bias_lr: 0.1
+
+# Model Architecture
+anchors: 3         # Number of anchors per output layer
+fl_gamma: 0.0      # Focal loss gamma (0 = CrossEntropy)
+
+# Image Processing
+img_size: 640      # Input image size
+rect: False        # Rectangular training (disabled for Phase 1)
+
+# Data Augmentation - ALL DISABLED for Phase 1 Baseline
+# =======================================================
+# Critical Requirement: Phase 1 baseline must have zero augmentation
+# to establish true performance baseline before Phase 2 robustness testing
+
+# HSV Augmentation (DISABLED)
+hsv_h: 0.0         # Image HSV-Hue augmentation (fraction)
+hsv_s: 0.0         # Image HSV-Saturation augmentation (fraction) 
+hsv_v: 0.0         # Image HSV-Value augmentation (fraction)
+
+# Spatial Augmentation (DISABLED)
+degrees: 0.0       # Image rotation (+/- deg)
+translate: 0.0     # Image translation (+/- fraction)
+scale: 0.0         # Image scale (+/- gain)
+shear: 0.0         # Image shear (+/- deg)
+perspective: 0.0   # Image perspective (+/- fraction), range 0-0.001
+
+# Flip Augmentation (DISABLED)
+flipud: 0.0        # Image flip up-down (probability)
+fliplr: 0.0        # Image flip left-right (probability)
+
+# Advanced Augmentation (DISABLED)
+mosaic: 0.0        # Image mosaic (probability)
+mixup: 0.0         # Image mixup (probability)
+copy_paste: 0.0    # Segment copy-paste (probability)
+
+# Label Smoothing (DISABLED)
+label_smoothing: 0.0
+
+# Training Efficiency
+workers: 8         # Number of dataloader workers
+cache: False       # Cache images for faster training
+image_weights: False  # Use weighted image selection
+multi_scale: False # Multi-scale training
+single_cls: False  # Single class training
+overlap_mask: True # Masks should overlap during training
+mask_ratio: 4      # Mask downsample ratio
+
+# Validation Parameters
+iou_t: 0.20        # IoU training threshold
+cls_pw: 1.0        # Class BCELoss positive_weight
+obj_pw: 1.0        # Object BCELoss positive_weight
+box_loss_gain: 0.05
+cls_loss_gain: 0.3  # Matches cls weight above
+obj_loss_gain: 0.7  # Matches obj weight above
+
+# NMS Parameters for Validation
+conf_thres: 0.001  # Confidence threshold for NMS
+iou_thres: 0.6     # IoU threshold for NMS
+max_det: 300       # Maximum detections per image
+
+# Model Saving and Checkpointing
+save_period: -1    # Save checkpoint every x epochs (disabled by default)
+patience: 300      # EarlyStopping patience (epochs without improvement)
+
+# Hardware Optimization
+amp: True          # Automatic Mixed Precision training
+sync_bn: False     # Synchronized BatchNorm
+quad: False        # Quad dataloader
+
+# Reproducibility
+deterministic: True # Ensure reproducible results
+
+# Experiment Tracking Integration
+# These settings work with Weights & Biases, TensorBoard, etc.
+project: 'yolov5n-visdrone-phase1'
+name: 'experiment1-baseline'

@@ -1,0 +1,69 @@
+anchor_t: 4.0
+augmentation_status: ALL_DISABLED
+batch_size: 8
+box: 0.05
+cache: true
+cfg: src/models/YOLOv5/models/yolov5n.yaml
+cls: 0.3
+cls_pw: 1.0
+copy_paste: 0.0
+cos_lr: true
+degrees: 0.0
+device: ''
+epochs: 100
+fl_gamma: 0.0
+fliplr: 0.0
+flipud: 0.0
+hsv_h: 0.0
+hsv_s: 0.0
+hsv_v: 0.0
+imgsz: 640
+iou_t: 0.2
+lr0: 0.01
+lrf: 0.01
+methodology_compliance: Protocol v2.0 - True Baseline Framework
+mixup: 0.0
+model: yolov5n.pt
+momentum: 0.937
+mosaic: 0.0
+multi_scale: false
+name_prefix: yolov5n_phase1_baseline
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
+nc: 10
+obj: 0.7
+obj_pw: 1.0
+optimizer: SGD
+path: data/my_dataset/visdrone
+patience: 300
+perspective: 0.0
+phase: 1
+project: runs/train
+save_best: true
+save_last: true
+save_period: -1
+scale: 0.0
+shear: 0.0
+target_map: 0.18
+test: test/images
+train: train/images
+translate: 0.0
+val: val/images
+val_during_training: true
+val_frequency: 1
+verbose: true
+wandb_disabled: true
+warmup_bias_lr: 0.1
+warmup_epochs: 3.0
+warmup_momentum: 0.8
+weight_decay: 0.0005
+workers: 0

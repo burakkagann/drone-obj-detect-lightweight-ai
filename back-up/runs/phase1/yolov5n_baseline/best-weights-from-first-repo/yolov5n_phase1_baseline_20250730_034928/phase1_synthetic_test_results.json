@@ -1,0 +1,83 @@
+{
+  "clean": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "clean",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test\\images"
+  },
+  "fog_light": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "fog_light",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\fog_light"
+  },
+  "fog_heavy": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "fog_heavy",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\fog_heavy"
+  },
+  "night_mild": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "night_mild",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\night_mild"
+  },
+  "night_severe": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "night_severe",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\night_severe"
+  },
+  "sensor_light": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "sensor_light",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\sensor_light"
+  },
+  "sensor_heavy": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "sensor_heavy",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\sensor_heavy"
+  },
+  "combined_mild": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "combined_mild",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\combined_mild"
+  },
+  "combined_severe": {
+    "mAP50": 0.0,
+    "mAP50-95": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classes": {},
+    "test_name": "combined_severe",
+    "test_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone\\test_synthetic\\combined_severe"
+  }
+}

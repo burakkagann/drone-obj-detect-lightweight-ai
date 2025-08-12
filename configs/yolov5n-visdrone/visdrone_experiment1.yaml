@@ -1,0 +1,96 @@
+# YOLOv5n VisDrone Dataset Configuration - Experiment 1
+# ======================================================
+#
+# Dataset configuration for Phase 1 baseline training on VisDrone dataset.
+# This configuration points to the properly formatted VisDrone data with
+# train/val/test splits and YOLO format annotations.
+#
+# VisDrone Dataset Details:
+# - Classes: 10 object categories commonly seen in drone imagery
+# - Training images: ~6,471 images with bounding box annotations
+# - Validation images: ~548 images for validation during training  
+# - Test images: ~1,610 images for final evaluation
+# - Image resolution: Various (typically 1080p+ drone imagery)
+# - Annotation format: YOLO format (class x_center y_center width height)
+
+# Dataset Root Path
+path: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\data\raw\visdrone
+
+# Split Definitions
+# Using absolute paths to eliminate path resolution issues
+train: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\data\raw\visdrone\VisDrone2019-DET-train\images
+val: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\data\raw\visdrone\VisDrone2019-DET-val\images
+test: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\data\raw\visdrone\VisDrone2019-DET-test-dev\images
+
+# Class Information
+nc: 10  # Number of classes
+
+# Class Names (VisDrone object categories)
+names:
+  0: pedestrian      # People walking or standing
+  1: people          # Groups of people or people in vehicles
+  2: bicycle         # Bicycles (with or without riders)
+  3: car             # Passenger cars
+  4: van             # Vans and small trucks
+  5: truck           # Large trucks and commercial vehicles
+  6: tricycle        # Three-wheeled vehicles/motorcycles
+  7: awning-tricycle # Covered tricycles (common in some regions)
+  8: bus             # Buses and large passenger vehicles
+  9: motor           # Motorcycles and scooters
+
+# Dataset Statistics (for reference)
+# These values are informational and help understand dataset characteristics
+dataset_info:
+  total_images: 8629
+  total_annotations: 540736
+  train_images: 6471
+  val_images: 548  
+  test_images: 1610
+  
+  # Class distribution (approximate percentages)
+  class_distribution:
+    pedestrian: 14.8%
+    people: 13.2%
+    bicycle: 8.1%
+    car: 44.8%
+    van: 8.4%
+    truck: 4.9%
+    tricycle: 2.4%
+    awning-tricycle: 1.0%
+    bus: 1.2%
+    motor: 1.2%
+  
+  # Image characteristics
+  image_stats:
+    typical_resolution: "1080p+"
+    format: "JPG"
+    color_space: "RGB"
+    
+  # Annotation characteristics  
+  annotation_stats:
+    format: "YOLO (normalized)"
+    avg_objects_per_image: 62.7
+    small_objects_percentage: 65%
+    
+# Training Characteristics for Phase 1 Baseline
+training_notes:
+  - "No augmentation applied (Phase 1 baseline requirement)"
+  - "Using pre-trained YOLOv5n weights as initialization"
+  - "Training optimized for small object detection (65% of dataset)"
+  - "SGD optimizer with lr=0.01 based on recovery analysis"
+  - "Loss weights: cls=0.3, obj=0.7 for optimal performance"
+  
+# Expected Performance Benchmarks (from recovery analysis)
+performance_expectations:
+  baseline_range: "17-25% mAP@0.5"
+  best_achieved: "24.66% mAP@0.5 (Run 1)"
+  typical_range: "17-19% mAP@0.5"
+  convergence_epoch: "35-40 epochs"
+  weather_degradation: "80-95% performance loss"
+  
+# Phase 1 Protocol Compliance
+protocol_compliance:
+  phase: "Phase 1 - True Baseline"
+  augmentation: "Disabled (all set to 0.0)"
+  purpose: "Establish baseline before Phase 2 robustness testing"
+  evaluation: "Clean dataset + synthetic weather conditions"

@@ -1,0 +1,19 @@
+{
+  "python_version": "3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]",
+  "pytorch_version": "2.7.1+cu118",
+  "cuda_available": true,
+  "device_info": {
+    "gpu_count": 1,
+    "cuda_version": "11.8",
+    "devices": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3060 Laptop GPU",
+        "memory_total": 5.99951171875,
+        "memory_allocated": 0.0,
+        "memory_cached": 0.0
+      }
+    ]
+  },
+  "dataset_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git Repos\\drone-obj-detection-lightweight-ai\\data\\my_dataset\\visdrone"
+}

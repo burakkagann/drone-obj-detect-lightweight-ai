@@ -1,0 +1,429 @@
+Master Thesis Proposal
+Study Programme: Computer Science I Big Data & Artificial Intelligence
+1. Name Surname: Burak Kağan Yılmazer
+Matriculation Number: 3121346
+Intake: Summer Semester 2024
+2. Master Thesis Topic: Robust Object Detection for Surveillance Dronesin Low-Visibility
+Environments Using Lightweight AI Models
+3. Structure:
+4. Name of First Supervisor: Prof. Dr. Alexander Iliev
+5. Name of Professorial Supervisor: Prof. Dr. Reiner Creutzburg
+Signature:
+14/05/2025
+Date, Candidate´s Signature
+Date, SRH Supervisor´s Signature
+Date, SRH/External Supervisor´s Signature
+(In case first Supervisor is a scientific worker)
+Contents
+1. Introduction .........................................................................................................3
+1.1 Background and Motivation..............................................................................3
+1.2 Research Focus and Objective .........................................................................3
+1.2.1 Background and Motivation for the Research ..............................................3
+1.2.2 Key Research Challenges ..........................................................................4
+1.2.3 Research Focus ........................................................................................5
+1.2.4 Objectives of the Research ........................................................................5
+1.2.5 Contribution to Knowledge ........................................................................6
+1.2.6 Potential Impact .......................................................................................6
+2. Literature Review..................................................................................................7
+2.1 Object Detection Models for Edge Devices........................................................7
+2.2 Low-Visibility Conditions and Synthetic Data Augmentation...............................7
+2.3 Edge Computing for Real-Time Inference ..........................................................8
+2.4 Sensor Effects and Augmentation Strategies .....................................................9
+2.5 Domain Adaptation and Style Transfer for Adverse Conditions.......................... 10
+2.6 Research Gaps ............................................................................................. 10
+2.7 Relevant Studies and Developments .............................................................. 11
+3. Research Methodology ....................................................................................... 12
+3.1 Approach and Design .................................................................................... 12
+3.2 Data Collection and Simulation Strategy......................................................... 13
+3.3 Methodology and Plan of Execution ................................................................ 13
+4. Evaluation Metrics and Methodology ................................................................... 14
+4.1 Evaluation Metrics......................................................................................... 14
+4.2 Evaluation Methodology ................................................................................ 14
+5. Expected Challenges and Novelty........................................................................ 14
+5.1 Challenges ................................................................................................... 14
+5.2 Novelty......................................................................................................... 15
+6. Bibliography.................................................................................................... 15
+7. Research schedule ......................................................................................... 17
+1. Introduction
+1.1 Background and Motivation
+Surveillance drones are integral to a variety of critical applications, including military 
+reconnaissance, search-and-rescue operations, environmental monitoring, and border 
+surveillance. These drones are typically equipped with high-resolution cameras and advanced 
+object detection systems, allowing them to identify threats, people, or relevant objects with 
+notable accuracy. However, the performance of these detection systems declines significantly 
+under adverse environmental conditions such as fog, low light, or rain. These limitations reduce 
+the overall effectiveness of drone surveillance in unpredictable, real-world scenarios.
+At the same time, the adoption of edge devices such as the NVIDIA Jetson Nano, Google Coral, 
+and Raspberry Pi has increased due to their capacity to perform on-device inference. These 
+devices offer benefits like lower latency and reduced reliance on network connectivity. 
+However, they come with major constraints in processing power and memory. Running large 
+object detection models like YOLOv4 or EfficientDet on such platforms is often impractical 
+without severe trade-offs in performance. As a result, the need has emerged for lightweight 
+detection models that are both computationally efficient and capable of robust performance in 
+challenging environments. (Mittal, 2024) (Dominic Paul, 2024)
+1.2 Research Focus and Objective
+1.2.1 Background and Motivation for the Research
+Surveillance drones have become essential tools in various high-stakes contexts—ranging from 
+defence missions and natural disaster response to environmental conservation and urban traffic 
+monitoring. These drones can capture high-resolution video and support AI-driven object 
+detection systems that help automate the recognition of people, vehicles, or anomalies. In such 
+missions, accuracy and real-time performance are crucial for operational success. (Adnan 
+Munir, 2024)
+However, a core challenge persists: most object detection models are trained on clear, high quality image datasets that do not reflect the unpredictable conditions encountered in real world drone operations. Fog, low-light, or glare from vehicle headlights can severely affect 
+detection accuracy. This is especially problematic in defence or emergency applications where 
+failure to detect a target can have serious consequences. (Yunxiang Yang, 2024)
+In parallel, drones increasingly rely on compact edge devices for on-board processing. These 
+edge devices are often incapable of supporting complex models like YOLOv4 or EfficientDet 
+due to memory and power limitations. Even lighter models such as YOLOv5n or MobileNet SSD may push the limits of what these platforms can handle, especially in real-time 
+applications. (Edward Humes, 2023) (Mittal, 2024) Therefore, there is a clear need for 
+optimized object detection models that can handle harsh environmental conditions while 
+running efficiently on edge hardware. (Alqahtani, 2024)
+1.2.2 Key Research Challenges
+1. Real-time Performance on Edge Devices: Achieving real-time inference on resource constrained edge devices remains one of the key challenges. Drones require low-latency 
+detection to make navigation and threat-avoidance decisions autonomously. However, 
+large models designed for servers or GPUs often exceed the computational limits of on board processors like the Jetson Nano. Deploying compressed or quantized models—
+such as those optimized through TensorFlow Lite or edge-specific variants like 
+Squeezed Edge YOLO—shows promise but still needs systematic performance 
+evaluations. (Darío G. Lema, 2024) (Mai, 2021)
+2. Model Robustness Under Adverse Environmental Conditions: Most pre-trained 
+object detectors perform well only under good visibility. Under conditions like fog, 
+rain, and nighttime glare, model accuracy degrades sharply. While some research uses 
+synthetic augmentation to improve generalization, most methods either simulate only a 
+single condition or lack realism. Domain adaptation using GANs or style transfer, as 
+well as sensor-level augmentations like blur and chromatic distortion, have shown 
+potential in improving model performance in poor lighting and weather. (Adnan Munir, 
+2024) (Yunxiang Yang, 2024) (Alexandra Carlson, 2018)
+3. Lightweight Models for Deployment: Balancing accuracy and computational 
+efficiency remains a critical concern. Even “lightweight” models like YOLOv5n can 
+consume too much memory or power for drones during long missions. Research into 
+ultra-compact models—such as those based on GAP8-compatible Squeezed Edge 
+YOLO or MobileNet-SSD architectures optimized with pruning and quantization—has 
+shown encouraging results, but wider testing is needed (Soro, 2020) (Edward Humes, 
+2023)
+4. Synthetic Data Generation: The ability to generate synthetic datasets that simulate 
+real-world challenging conditions (fog, low-light, etc.) is another major research 
+challenge. While many researchers have explored synthetic augmentation for specific 
+conditions, generating diverse, realistic datasets that account for multiple simultaneous 
+environmental distortions remains an area that requires further exploration (Adnan 
+Munir, 2024).
+1.2.3 Research Focus
+This thesis will investigate how to optimize lightweight object detection models for edge-based 
+drone surveillance in challenging visual conditions. Special attention will be paid to scenarios 
+involving fog, nighttime operations, and low-resolution thermal imagery. The study will 
+explore how synthetic augmentation strategies and sensor-effect modelling can improve 
+detection robustness while maintaining real-time inference capabilities.
+Specifically, the research will explore below questions:
+• Real-Time Edge Deployment: How can lightweight models be optimized for edge 
+devices with limited resources, ensuring real-time inference without sacrificing 
+accuracy?
+• Environmental Robustness: How can synthetic data techniques be used to simulate 
+low-visibility conditions, and to what extent do these augmentations improve the 
+robustness of models under real-world challenges?
+• Model Complexity vs. Performance Trade-Offs: What is the performance trade-off 
+between complex, high-accuracy models and lightweight models optimized for edge 
+devices in terms of both environmental robustness and real-time processing?
+1.2.4 Objectives of the Research
+The primary goal of this thesis is to develop lightweight object detection models capable of 
+real-time performance on edge devices such as NVIDIA Jetson Nano and Raspberry Pi while 
+maintaining robust detection capabilities in low-visibility environments. The specific 
+objectives of the research are as follows:
+1. Evaluate the performance of lightweight detection models such as YOLOv5n, 
+MobileNet-SSD, and NanoDet under real-time constraints on edge hardware like Jetson 
+Nano and Raspberry Pi.
+2. Explore the effectiveness of synthetic data augmentation, including fog simulation, 
+low-light translation, and sensor-effect modelling in improving robustness.
+3. Analyse performance trade-offs between model complexity, accuracy, and energy 
+efficiency, particularly in adverse conditions.
+4. Develop a full-stack deployment framework that includes both baseline models and 
+synthetically trained variants, optimized for drone-based inference in real-world 
+environments.
+1.2.5 Contribution to Knowledge
+The research aims to provide:
+• A benchmarking framework for evaluating lightweight object detection models under 
+real-world conditions on edge devices.
+• Insights into the use of synthetic data augmentation for improving model robustness in 
+low-visibility environments (fog, night-time, thermal).
+• A comparison of model performance and trade-offs in terms of inference speed, 
+accuracy, and robustness on resource-constrained devices.
+• Practical deployment guidelines for using object detection on drones in challenging 
+environmental conditions.
+1.2.6 Potential Impact
+The expected outcomes could significantly advance the deployment of real-time, AI-powered 
+surveillance drones in high-stakes environments. By improving model robustness and reducing 
+latency through edge-optimized architectures and synthetic training, this research could benefit 
+military reconnaissance, search-and-rescue missions, and traffic monitoring in poor visibility. 
+The findings will be especially valuable in scenarios where bandwidth is limited, and quick 
+decision-making is critical.
+2. Literature Review
+2.1 Object Detection Models for Edge Devices
+The advances in deep learning-based object detection models have significantly impacted 
+computer vision. Convolutional Neural Networks (CNNs) have traditionally dominated object 
+detection tasks. Over time, the development of models like the YOLO (You Only Look Once) 
+series has enabled high accuracy with real-time inference performance. (Christoffer Åleskog, 
+2022)
+YOLO has evolved from YOLOv1 to YOLOv8, with each version enhancing accuracy, 
+handling of small objects, and inference speed. YOLOv4 and YOLOv5, for instance, 
+introduced innovations such as mosaic data augmentation, CSPDarknet53 backbone, and 
+PANet architecture (Darío G. Lema, 2024; Adnan Munir, 2024). Despite these improvements, 
+the growing complexity of these models makes them less suitable for resource-constrained 
+environments. 
+To address this, lightweight models like YOLOv4-Tiny, YOLOv5n, and MobileNet-SSD have 
+emerged. These models use architectural simplifications and optimization techniques like 
+pruning, quantization, and knowledge distillation to reduce computational load (Soro, 2020; 
+Mai, 2021; Mittal, 2024). Notably, Squeezed Edge YOLO demonstrated up to 76% energy 
+efficiency improvement and 3.3x faster throughput compared to baseline models when 
+deployed on devices like GAP8 and Jetson Nano. (Edward Humes, 2023)
+Frameworks like TensorFlow Lite (TFLite) further support deploying YOLO and SSD models 
+on smartphones, IoT systems, and embedded platforms by leveraging model compression and 
+hardware acceleration (e.g., DSP, GPU). (Dominic Paul, 2024)
+Nevertheless, even optimized models struggle in non-ideal conditions such as fog, rain, or low 
+light. Enhancing robustness under these adverse settings remains a key challenge for deploying 
+lightweight detectors on edge devices. (Mittal, 2024). (Paissan, 2024)
+2.2 Low-Visibility Conditions and Synthetic Data Augmentation
+In real-world surveillance scenarios, conditions like fog, rain, and nighttime lighting 
+significantly impair the accuracy of object detection. To mitigate these challenges, researchers 
+have applied synthetic data augmentation techniques to improve model generalization.
+Fog simulation using OpenCV or gaming engines like Unreal Engine has proven effective. 
+Studies by Munir et al. (2024) and Zhang et al. (2022) confirm that training on fog-augmented 
+datasets enhances drone-based detection under low-visibility conditions (Adnan Munir, 2024). 
+More advanced work has introduced style transfer using GANs and domain adaptation 
+techniques to simulate nighttime images, leveraging frameworks like CARLA and CycleGAN 
+for realistic effects such as headlight glare and rural lighting conditions. (Yunxiang Yang, 2024)
+Low-light simulation and enhancement techniques include image-to-image translation, gamma 
+correction, and adaptive histogram equalization. GAN-based approaches like AugGAN and 
+Efficient Attention GAN have further improved detection by producing realistic night-style 
+images from daytime data (Yang et al., 2024).
+Additionally, researchers like Carlson et al. (2018) emphasized modelling sensor-level 
+distortions, such as chromatic aberration, blur, and noise, to narrow the domain gap between 
+synthetic and real data. Their pipeline introduced sensor-aware augmentation that led to better 
+object detection performance in urban driving scenes. (Alexandra Carlson, 2018)
+While these methods show promise, synthetic augmentation still risks overfitting to artifacts 
+not present in real-world scenes. Combining multiple environmental effects into a single 
+augmentation pipeline, such as fog plus glare or rain plus blur, is still underexplored. (Alhassan 
+Mumuni, 2022) Moreover, studies highlight the need to balance synthetic with real data to 
+maintain generalization. (Spyros Theodoropoulos, 2023)
+2.3 Edge Computing for Real-Time Inference
+Edge computing plays a central role in real-time object detection, especially where latency, 
+connectivity, and privacy are critical. Devices like NVIDIA Jetson Nano, Google Coral, and 
+GAP8 processors allow for onboard inference without cloud dependency (Stephan Patrick 
+Baller, 2021).
+Optimizing deep models for edge deployment is a core concern in TinyML research. Common 
+strategies include quantization, pruning, and architecture search. Lightweight frameworks such 
+as TensorFlow Lite (TFLite) help deploy YOLO and SSD models efficiently on edge platforms. 
+TFLite's ability to run compressed models with GPU or DSP acceleration has shown success 
+in applications such as smart surveillance and industrial automation. (Dominic Paul, 2024)
+Studies like those by Mittal (2024) emphasize the importance of partitioning inference tasks 
+across network layers or hardware accelerators to reduce execution time and energy 
+consumption. The Squeezed Edge YOLO model exemplifies how carefully profiled 
+optimizations allow deployment on microcontrollers like GAP8, overcoming stack memory 
+limitations through extreme model compression. (Edward Humes, 2023)
+Despite these developments, large models like YOLOv4 or YOLOv8 remain too 
+computationally expensive for real-time use on ultra-low-power devices. The challenge is to 
+balance inference speed, accuracy, and energy consumption, particularly for mobile and drone based applications. (Mittal, 2024)
+2.4 Sensor Effects and Augmentation Strategies
+In real-world deployments, edge devices operate with low-cost cameras that often introduce 
+artifacts like blur, noise, and overexposure. These sensor effects can significantly degrade the 
+performance of object detection models trained only on clean datasets. Addressing this, recent 
+research has focused on sensor-domain augmentation strategies to bridge the performance gap 
+between synthetic and real images.
+Carlson et al. (2018) proposed a physically-based augmentation pipeline that simulates camera specific distortions such as chromatic aberration, noise, exposure shifts, and blur. By 
+integrating these distortions into synthetic training datasets, their approach improved detection 
+performance on real-world test sets such as KITTI. This method highlights the importance of 
+sensor-level modelling in achieving better generalization for edge AI applications. (Alexandra 
+Carlson, 2018)
+Moreover, sensor effects become even more critical in low-light or nighttime conditions, where 
+image quality is naturally lower. In such scenarios, simulating sensor-induced noise and glare 
+during training allows models to better adapt during inference on noisy inputs.
+Despite promising results, few augmentation pipelines currently incorporate sensor-level 
+variation in a modular, reusable way. More research is needed to develop lightweight 
+augmentation tools compatible with drone and mobile training datasets.
+2.5 Domain Adaptation and Style Transfer for Adverse Conditions
+Another strategy to improve model performance under low-visibility conditions is domain 
+adaptation through style transfer. These techniques aim to translate images from one domain 
+(e.g., daytime) into another (e.g., nighttime or foggy) while preserving semantic content.
+Yang et al. (2024) introduced a GAN-based framework that uses CARLA-generated data and 
+Efficient Attention GANs to convert daytime driving images into realistic nighttime versions. 
+Their method includes headlight glare simulation and labelling-free augmentation, showing 
+significant improvements in YOLO-based detection performance for rural night environments.
+(Yunxiang Yang, 2024)
+Similarly, other studies have used CycleGAN and AugGAN for day-to-night or weather-related 
+transformations, allowing models to be trained on synthetic pairs while avoiding the need for 
+large, annotated datasets in the target domain. These approaches are especially relevant when 
+training data for harsh environmental conditions is scarce.
+Neural Style Transfer (NST) methods are also gaining attention for their ability to diversify 
+training data while maintaining object structure. Unlike standard augmentation, which often 
+manipulates entire images uniformly, NST introduces semantic-level modifications, which can 
+enhance robustness without significant data collection overhead. (Alhassan Mumuni, 2022)
+These methods highlight the growing relevance of generative AI and neural rendering for 
+training edge-deployable object detection systems capable of handling diverse environmental 
+inputs.
+2.6 Research Gaps
+From the literature, several gaps in research emerge:
+1. Model robustness under low-visibility conditions: While some object detection 
+models are optimized for edge devices, few are specifically designed to perform under 
+challenging environmental conditions such as fog, low-light, or rain.
+2. Edge-device optimization: Many lightweight models are not optimized for real-time 
+inference on low-power edge devices, leading to slow inference speeds and high-power
+consumption.
+3. Synthetic data augmentation for rare conditions: Despite the benefits of synthetic 
+data augmentation, there is limited research on its impact on multi-condition 
+environments and its generalizability across different tasks (e.g., surveillance, vehicle 
+detection).
+These gaps highlight the need for research that not only focuses on improving model accuracy 
+but also addresses the challenges associated with real-time performance and model robustness 
+on edge devices under adverse conditions.
+2.7 Relevant Studies and Developments
+• Munir et al. (2024): Investigated the use of synthetic fog and low-light augmentation 
+to train object detection models for drone surveillance under adverse weather 
+conditions. Their findings showed that synthetic augmentation could significantly 
+improve the robustness of models deployed in foggy and low-light environments
+(Adnan Munir, 2024). 
+• Munir et al. (2024): Explored fog and low-light augmentation to improve drone-based 
+surveillance detection under poor visibility conditions (Adnan Munir, 2024).
+• Zhang et al. (2022): Applied model pruning and quantization to adapt lightweight 
+models for edge deployments (Soro, 2020).
+• Lema et al. (2024): Benchmarked YOLO variants across Jetson Nano and Coral Dev 
+Board, offering insights into trade-offs between model accuracy and runtime 
+performance (Lema, 2024).
+• Yang et al. (2024): Introduced a labelling-free augmentation framework using Efficient 
+Attention GAN and CARLA simulation for enhancing nighttime vehicle detection.
+• Carlson et al. (2018): Proposed a physically-based pipeline to model sensor distortions 
+such as blur and colour cast, significantly improving model generalization across 
+domains.
+• Rozanec et al. (2023): Demonstrated how GANs can enhance class balance and data 
+diversity in visual inspection, achieving near-perfect AUC scores (≥ 0.98) in real-world 
+tasks.
+• Humes et al. (2023): Presented Squeezed Edge YOLO for GAP8 and Jetson Nano, 
+achieving significant gains in throughput and energy efficiency for onboard inference.
+• Paul & Patel (2024): Demonstrated the practical deployment of YOLO and SSD models 
+using TFLite for smart surveillance and embedded systems, emphasizing model 
+compression and acceleration.
+3. Research Methodology
+3.1 Approach and Design
+This research will adopt a comparative evaluation approach, where multiple lightweight object 
+detection models (YOLOv5n, MobileNet-SSD, NanoDet) will be tested under various 
+environmental conditions. The models will be trained and tested using both real-world and 
+synthetic datasets to simulate low-visibility environments. The primary steps in the 
+methodology are outlined below:
+1. Model Selection: YOLOv8n ,YOLOv5n, MobileNet-SSD, and NanoDet will be 
+selected due to their lightweight nature and ability to run efficiently on edge devices. 
+These models will be tested for their suitability in real-time inference under edge device 
+constraints.
+2. Dataset: Existing drone surveillance datasets, such as CIFAR, VisDrone and DOTA, 
+will be used for benchmarking. Additionally, synthetic data augmentation techniques 
+will be applied to simulate adverse environmental conditions like fog, night-time, and 
+rain.
+3. Training and Testing: Models will be trained on a combination of real and synthetic 
+datasets. Each model's performance will be evaluated on edge devices such as NVIDIA 
+Jetson Nano and Raspberry Pi to assess real-time inference capabilities.
+4. Performance Evaluation: Detection accuracy (mAP), inference speed (FPS), and 
+power consumption on edge devices will be measured and compared across models and 
+environmental conditions.
+5. Evaluation Metrics: The following metrics will be used to evaluate performance:
+o Detection Accuracy: mAP, Precision, Recall
+o Real-Time Performance: FPS, model size, memory usage
+o Robustness: Performance degradation across different synthetic environmental 
+conditions (fog, night, etc.)
+3.2 Data Collection and Simulation Strategy
+• Synthetic Data Augmentation: The research will use OpenCV & Unity to simulate 
+adverse environmental conditions, including fog, night, and blur. These augmented 
+images will be used to train models and evaluate their robustness.
+• Real-World Data: Datasets such as CIFAR, VisDrone and DOTA will be used as 
+baselines to benchmark the performance of each model under normal and augmented 
+conditions.
+• Edge Deployment: Models will be deployed on NVIDIA Jetson Nano and Raspberry 
+Pi edge devices. Real-time performance will be measured by the frames-per-second 
+(FPS) rate, and power consumption will be monitored using tools like NVIDIA Power 
+Profiler and Raspberry Pi power meters.
+3.3 Methodology and Plan of Execution
+The project will proceed through the following phases:
+• Phase 1 (Month 1): Literature review, finalizing research questions, gathering datasets, 
+and setting up the synthetic data augmentation pipeline.
+• Phase 2 (Month 2): Train baseline models on real datasets and evaluate their 
+performance on edge devices.
+• Phase 3 (Month 3): Implement synthetic data augmentation techniques (fog, night, 
+blur) and retrain models.
+• Phase 4 (Month 4): Deploy the models on edge devices (Jetson Nano, Raspberry Pi), 
+measure real-time performance (FPS, power consumption), and assess robustness 
+across environmental conditions.
+• Phase 5 (Month 5): Analyze results, document findings, and prepare the final thesis 
+report.
+4. Evaluation Metrics and Methodology
+4.1 Evaluation Metrics
+The models will be evaluated based on the following metrics:
+• Detection Accuracy: mAP (mean average precision), Precision, Recall
+• Inference Speed: FPS (Frames per second), inference time (ms)
+• Model Size: Memory usage (MB), storage requirements
+• Robustness: Performance degradation under synthetic environmental conditions (fog, 
+night, blur)
+4.2 Evaluation Methodology
+• Model Comparison: The models will be compared based on their performance in 
+terms of accuracy (mAP) and real-time inference speed (FPS).
+• Synthetic Data Impact: The effect of synthetic data augmentation on model robustness 
+will be evaluated by comparing models trained with and without augmented data.
+• Edge Device Performance: Real-time performance (FPS) and power consumption will 
+be measured on NVIDIA Jetson Nano and Raspberry Pi devices.
+5. Expected Challenges and Novelty
+5.1 Challenges
+• Model Optimization: Finding the right balance between accuracy and real-time 
+performance on edge devices will be a major challenge.
+• Synthetic Data Quality: Ensuring that the synthetic augmentation mimics real-world 
+conditions without overfitting to synthetic artifacts.
+• Edge Device Constraints: Working with limited processing power and memory on 
+edge devices like Jetson Nano requires careful optimization of models.
+5.2 Novelty
+• Performance Benchmarking: This thesis will provide a comprehensive benchmarking 
+framework for lightweight object detection models in low-visibility conditions on edge 
+devices.
+• Synthetic Data Augmentation: The research will contribute novel insights into the use 
+of synthetic data to improve object detection in UAV-based surveillance under adverse 
+conditions.
+• Trade-off Analysis: The study will provide an analysis of the trade-off between model 
+complexity, environmental robustness, and real-time performance, helping to guide the 
+development of lightweight models for edge deployments.
+6.Bibliography
+Adnan Munir, A. J. (2024). Impact of Adverse Weather and Image Distortions on Vision Based UAV Detection: A Performance Evaluation of Deep Learning Models.
+Alexandra Carlson, K. A. (2018). Modeling Camera Effects to Improve Visual Learning 
+from Synthetic Data.
+Alhassan Mumuni, F. M. (2022). A survey of synthetic data augmentation methods in 
+computer vision.
+Alqahtani, D. K. (2024). Benchmarking Deep Learning Models for Object Detection on 
+Edge Computing Devices.
+Christoffer Åleskog, ,. H. (2022). Recent Developments in Low-Power AI Accelerators: A 
+Survey.
+Darío G. Lema, R. U. (2024). Quantitative comparison and performance evaluation of 
+deep learning-based object detection models on edge computing devices.
+DIMITRIOS KOLOSOV, V. K. (2022). Anatomy of Deep Learning Image Classification and 
+Object Detection on Commercial Edge Devices: A Case Study on Face Mask 
+Detection.
+Dominic Paul, V. P. (2024). EDGE AI BASED OBJECT DETECTION SYSTEM USING TFLITE.
+Edward Humes, M. N. (2023). Squeezed Edge YOLO: Onboard Object Detection on Edge 
+Devices.
+Lema, D. G. (2024). Quantitative comparison and performance evaluation of deep 
+learning-based object detection models on edge computing devices.
+Mai, L. (2021). Performance Evaluation of Deep Learning Models on Embedded Platform 
+for Edge AI-Based Real time Traffic Tracking and Detecting Applications.
+Mittal, P. (2024). A comprehensive survey of deep learning-based lightweight object 
+detection models for edge devices.
+Paissan, F. (2024). PhiNets: a scalable backbone for low-power AI at the edge.
+Soro, S. (2020). TinyML for Ubiquitous Edge AI.
+Spyros Theodoropoulos, E. K. (2023). Synthetic Data Augmentation Using GAN For 
+Improved Automated Visual Inspection.
+Stephan Patrick Baller, A. J. (2021). DeepEdgeBench: Benchmarking Deep Neural.
+Yunxiang Yang, H. Z. (2024). ENHANCING NIGHTTIME VEHICLE DETECTION WITH DAY TO-NIGHT STYLE TRANSFER AND LABELING-FREE AUGMENTATION.
+7.Research schedule
+Research phase Objectives Deadline
+Phase 1 Literature review, finalizing research questions, gathering datasets, and 
+setting up the synthetic data augmentation pipeline.
+01/06/2025
+Phase 2 Train baseline models on real datasets and evaluate their performance 
+on edge devices.
+01/07/2025
+Phase 3 Implement synthetic data augmentation techniques (fog, night, blur) 
+and retrain models.
+15/07/2025
+Phase 4 Deploy the models on edge devices (Jetson Nano, Raspberry Pi), 
+measure real-time performance (FPS, power consumption), and assess 
+robustness across environmental conditions.
+15/08/2025
+Phase 5 Analyze results, document findings, and prepare the final thesis report. 15/09/2025

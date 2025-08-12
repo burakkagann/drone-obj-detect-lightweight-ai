@@ -1,0 +1,333 @@
+{
+  "validation_timestamp": "2025-08-12T21:33:23.968281",
+  "overall_status": "\u274c NOT READY",
+  "summary": {
+    "total_checks": 47,
+    "passed": 44,
+    "warnings": 0,
+    "errors": 3
+  },
+  "detailed_results": {
+    "Environment": [
+      {
+        "item": "Python Version",
+        "status": "PASS",
+        "message": "Python 3.13.5",
+        "details": {}
+      }
+    ],
+    "Dependencies": [
+      {
+        "item": "torch",
+        "status": "PASS",
+        "message": "Version: 2.7.1+cu118",
+        "details": {}
+      },
+      {
+        "item": "torchvision",
+        "status": "PASS",
+        "message": "Version: 0.22.1+cu118",
+        "details": {}
+      },
+      {
+        "item": "numpy",
+        "status": "PASS",
+        "message": "Version: 2.1.2",
+        "details": {}
+      },
+      {
+        "item": "opencv-python",
+        "status": "PASS",
+        "message": "Version: 4.12.0",
+        "details": {}
+      },
+      {
+        "item": "PyYAML",
+        "status": "PASS",
+        "message": "Version: 6.0.2",
+        "details": {}
+      },
+      {
+        "item": "Pillow",
+        "status": "PASS",
+        "message": "Version: 11.3.0",
+        "details": {}
+      }
+    ],
+    "Hardware": [
+      {
+        "item": "CUDA",
+        "status": "PASS",
+        "message": "1 GPU(s) - NVIDIA GeForce RTX 3060 Laptop GPU (6.0GB)",
+        "details": {}
+      }
+    ],
+    "File Structure": [
+      {
+        "item": "Project Root",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai",
+        "details": {}
+      },
+      {
+        "item": "YOLOv5 Directory",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\models\\yolov5n\\baseline\\yolov5",
+        "details": {}
+      },
+      {
+        "item": "Config Directory",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\configs\\yolov5n-visdrone",
+        "details": {}
+      },
+      {
+        "item": "Data Root",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\data",
+        "details": {}
+      }
+    ],
+    "Scripts": [
+      {
+        "item": "Training Script",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\train_phase1_experiment1.py",
+        "details": {}
+      },
+      {
+        "item": "Validation Script",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\validate_phase1_experiment1.py",
+        "details": {}
+      },
+      {
+        "item": "Weather Testing Script",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\test_weather_conditions.py",
+        "details": {}
+      },
+      {
+        "item": "Master Script",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\run_complete_experiment1.py",
+        "details": {}
+      }
+    ],
+    "YOLOv5 Files": [
+      {
+        "item": "YOLOv5 Train Script",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\models\\yolov5n\\baseline\\yolov5\\train.py",
+        "details": {}
+      },
+      {
+        "item": "YOLOv5 Validation Script",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\models\\yolov5n\\baseline\\yolov5\\val.py",
+        "details": {}
+      },
+      {
+        "item": "YOLOv5n Model Config",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\models\\yolov5n\\baseline\\yolov5\\models\\yolov5n.yaml",
+        "details": {}
+      },
+      {
+        "item": "YOLOv5n Weights",
+        "status": "PASS",
+        "message": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\models\\yolov5n\\baseline\\yolov5\\yolov5n.pt",
+        "details": {}
+      }
+    ],
+    "Configuration": [
+      {
+        "item": "Training Config",
+        "status": "PASS",
+        "message": "Valid YAML: 57 parameters",
+        "details": {}
+      },
+      {
+        "item": "Dataset Config",
+        "status": "PASS",
+        "message": "Valid YAML: 10 parameters",
+        "details": {}
+      }
+    ],
+    "Phase 1 Compliance": [
+      {
+        "item": "Zero Augmentation",
+        "status": "PASS",
+        "message": "All augmentation parameters correctly set to 0.0",
+        "details": {}
+      }
+    ],
+    "Optimization": [
+      {
+        "item": "optimizer",
+        "status": "PASS",
+        "message": "Optimal value: SGD",
+        "details": {}
+      },
+      {
+        "item": "lr0",
+        "status": "PASS",
+        "message": "Optimal value: 0.01",
+        "details": {}
+      },
+      {
+        "item": "cls",
+        "status": "PASS",
+        "message": "Optimal value: 0.3",
+        "details": {}
+      },
+      {
+        "item": "obj",
+        "status": "PASS",
+        "message": "Optimal value: 0.7",
+        "details": {}
+      },
+      {
+        "item": "epochs",
+        "status": "PASS",
+        "message": "Optimal value: 50",
+        "details": {}
+      },
+      {
+        "item": "batch_size",
+        "status": "PASS",
+        "message": "Optimal value: 8",
+        "details": {}
+      }
+    ],
+    "Dataset Config": [
+      {
+        "item": "path",
+        "status": "PASS",
+        "message": "Present",
+        "details": {}
+      },
+      {
+        "item": "train",
+        "status": "PASS",
+        "message": "Present",
+        "details": {}
+      },
+      {
+        "item": "val",
+        "status": "PASS",
+        "message": "Present",
+        "details": {}
+      },
+      {
+        "item": "test",
+        "status": "PASS",
+        "message": "Present",
+        "details": {}
+      },
+      {
+        "item": "nc",
+        "status": "PASS",
+        "message": "Present",
+        "details": {}
+      },
+      {
+        "item": "names",
+        "status": "PASS",
+        "message": "Present",
+        "details": {}
+      },
+      {
+        "item": "Class Count",
+        "status": "PASS",
+        "message": "10 classes",
+        "details": {}
+      },
+      {
+        "item": "Class Names",
+        "status": "PASS",
+        "message": "10 names match nc=10",
+        "details": {}
+      }
+    ],
+    "Dataset Paths": [
+      {
+        "item": "TRAIN Path",
+        "status": "FAIL",
+        "message": "Path not found: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\data\\raw\\visdrone\\VisDrone2019-DET-train\\images",
+        "details": {}
+      },
+      {
+        "item": "VAL Path",
+        "status": "FAIL",
+        "message": "Path not found: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\data\\raw\\visdrone\\VisDrone2019-DET-val\\images",
+        "details": {}
+      },
+      {
+        "item": "TEST Path",
+        "status": "FAIL",
+        "message": "Path not found: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\data\\raw\\visdrone\\VisDrone2019-DET-test-dev\\images",
+        "details": {}
+      }
+    ],
+    "Synthetic Data": [
+      {
+        "item": "VisDrone2019-DET-test-fog",
+        "status": "PASS",
+        "message": "1610 images found",
+        "details": {}
+      },
+      {
+        "item": "VisDrone2019-DET-test-rain",
+        "status": "PASS",
+        "message": "1610 images found",
+        "details": {}
+      },
+      {
+        "item": "VisDrone2019-DET-test-night",
+        "status": "PASS",
+        "message": "1610 images found",
+        "details": {}
+      },
+      {
+        "item": "VisDrone2019-DET-test-mixed",
+        "status": "PASS",
+        "message": "1610 images found",
+        "details": {}
+      }
+    ],
+    "Permissions": [
+      {
+        "item": "Logs Directory",
+        "status": "PASS",
+        "message": "Write access confirmed: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results",
+        "details": {}
+      },
+      {
+        "item": "YOLOv5 Directory",
+        "status": "PASS",
+        "message": "Read access confirmed: 6 Python files found",
+        "details": {}
+      }
+    ],
+    "Resources": [
+      {
+        "item": "Disk Space",
+        "status": "PASS",
+        "message": "100.1GB available",
+        "details": {}
+      }
+    ]
+  },
+  "errors": [
+    "Dataset Paths: TRAIN Path - Path not found: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\data\\raw\\visdrone\\VisDrone2019-DET-train\\images",
+    "Dataset Paths: VAL Path - Path not found: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\data\\raw\\visdrone\\VisDrone2019-DET-val\\images",
+    "Dataset Paths: TEST Path - Path not found: C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\data\\raw\\visdrone\\VisDrone2019-DET-test-dev\\images"
+  ],
+  "warnings": [],
+  "environment_info": {
+    "python_version": "3.13.5",
+    "platform": "win32",
+    "working_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1"
+  }
+}

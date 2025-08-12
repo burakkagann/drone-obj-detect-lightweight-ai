@@ -1,0 +1,6 @@
+condition,mAP_50,mAP_50_95,precision,recall,f1,mAP_50_degradation,mAP_50_95_degradation,precision_degradation,recall_degradation,f1_degradation
+clean,0.0,0.0,0.0,0.0,0.0,,,,,
+fog,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+rain,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+night,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+mixed,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

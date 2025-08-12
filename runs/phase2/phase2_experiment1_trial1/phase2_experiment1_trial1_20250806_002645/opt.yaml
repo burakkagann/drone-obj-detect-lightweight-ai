@@ -1,0 +1,73 @@
+weights: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\runs\phase1\yolov5n_baseline\phase1_baseline_exp2_20250804_021702\weights\best.pt
+cfg: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\models\yolov5n\baseline\yolov5\models\yolov5n.yaml
+data: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\data\augmented\phase2\phase2_experiment1_trial1_fixed\phase2_experiment1_trial1_fixed_dataset.yaml
+hyp:
+  lr0: 0.008
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  box: 0.05
+  cls: 0.3
+  cls_pw: 1.0
+  obj: 0.7
+  obj_pw: 1.0
+  iou_t: 0.2
+  anchor_t: 4.0
+  fl_gamma: 0.0
+  label_smoothing: 0.0
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.5
+  fliplr: 0.5
+  mosaic: 0.5
+  mixup: 0.0
+  copy_paste: 0.0
+epochs: 75
+batch_size: 8
+imgsz: 640
+rect: false
+resume: false
+nosave: false
+noval: false
+noautoanchor: false
+noplots: false
+evolve: null
+evolve_population: data\hyps
+resume_evolve: null
+bucket: ''
+cache: ram
+image_weights: false
+device: '0'
+multi_scale: false
+single_cls: false
+optimizer: SGD
+sync_bn: false
+workers: 0
+project: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\runs\phase2\phase2_experiment1_trial1
+name: phase2_experiment1_trial1_20250806_002645
+exist_ok: true
+quad: false
+cos_lr: false
+label_smoothing: 0.0
+patience: 50
+freeze:
+- 0
+save_period: 10
+seed: 0
+local_rank: -1
+entity: null
+upload_dataset: false
+bbox_interval: -1
+artifact_alias: latest
+ndjson_console: false
+ndjson_file: false
+save_dir: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\runs\phase2\phase2_experiment1_trial1\phase2_experiment1_trial1_20250806_002645

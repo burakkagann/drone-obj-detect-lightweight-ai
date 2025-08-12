@@ -1,0 +1,16 @@
+names:
+- pedestrian
+- people
+- bicycle
+- car
+- van
+- truck
+- tricycle
+- awning-tricycle
+- bus
+- motor
+nc: 10
+path: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\data\raw\visdrone
+test: VisDrone2019-DET-test-dev/images
+train: VisDrone2019-DET-train/images
+val: VisDrone2019-DET-val/images
