@@ -123,6 +123,54 @@ class CompleteExperimentRunner:
             raise
         
         self.logger.info("[VALIDATION] Environment validation completed")
+    
+    def _run_subprocess_with_live_output(self, cmd, cwd, prefix=""):
+        """Run subprocess with live output display and logging"""
+        import subprocess
+        
+        # Start the process
+        process = subprocess.Popen(
+            cmd, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT,  # Merge stderr with stdout
+            text=True, 
+            bufsize=1,  # Line buffered
+            universal_newlines=True,
+            cwd=cwd
+        )
+        
+        output_lines = []
+        
+        # Read output line by line and display/log in real-time
+        try:
+            while True:
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    line = output.strip()
+                    if line:  # Only log non-empty lines
+                        # Display to terminal
+                        print(f"{prefix} {line}")
+                        # Log to file
+                        self.logger.info(f"{prefix} {line}")
+                        # Store for parsing
+                        output_lines.append(line)
+                        
+        except Exception as e:
+            self.logger.error(f"Error reading subprocess output: {e}")
+        
+        # Wait for process to complete
+        return_code = process.wait()
+        
+        # Create a result object similar to subprocess.run
+        class SubprocessResult:
+            def __init__(self, returncode, stdout_lines):
+                self.returncode = returncode
+                self.stdout = '\n'.join(stdout_lines)
+                self.stderr = ""  # We merged stderr with stdout
+        
+        return SubprocessResult(return_code, output_lines)
         
     def run_training_phase(self):
         """Execute training phase"""
@@ -148,8 +196,10 @@ class CompleteExperimentRunner:
             # Record start time
             start_time = time.time()
             
-            # Execute training
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=self.script_dir)
+            # Execute training with live output and logging
+            self.logger.info(f"[TRAINING] Training output will be displayed below:")
+            self.logger.info("-" * 60)
+            result = self._run_subprocess_with_live_output(cmd, self.script_dir, "[TRAINING]")
             
             # Record end time
             end_time = time.time()
@@ -174,16 +224,18 @@ class CompleteExperimentRunner:
                 
             else:
                 self.logger.error(f"[TRAINING] Training failed with return code: {result.returncode}")
-                self.logger.error(f"[TRAINING] Error output: {result.stderr}")
+                self.logger.error(f"[TRAINING] STDOUT: {result.stdout}")
+                self.logger.error(f"[TRAINING] STDERR: {result.stderr}")
                 
                 self.experiment_results['training'] = {
                     'success': False,
                     'error': result.stderr,
+                    'stdout': result.stdout,
                     'return_code': result.returncode,
                     'timestamp': datetime.now().isoformat()
                 }
                 
-                raise RuntimeError(f"Training failed: {result.stderr}")
+                raise RuntimeError(f"Training failed: {result.stderr if result.stderr else result.stdout}")
                 
         except Exception as e:
             self.logger.error(f"[TRAINING] Training phase failed: {str(e)}")
@@ -238,8 +290,10 @@ class CompleteExperimentRunner:
             # Record start time
             start_time = time.time()
             
-            # Execute validation
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=self.script_dir)
+            # Execute validation with live output and logging
+            self.logger.info(f"[VALIDATION] Validation output will be displayed below:")
+            self.logger.info("-" * 60)
+            result = self._run_subprocess_with_live_output(cmd, self.script_dir, "[VALIDATION]")
             
             # Record end time
             end_time = time.time()
@@ -328,8 +382,10 @@ class CompleteExperimentRunner:
             # Record start time
             start_time = time.time()
             
-            # Execute weather testing
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=self.script_dir)
+            # Execute weather testing with live output and logging
+            self.logger.info(f"[WEATHER] Weather testing output will be displayed below:")
+            self.logger.info("-" * 60)
+            result = self._run_subprocess_with_live_output(cmd, self.script_dir, "[WEATHER]")
             
             # Record end time
             end_time = time.time()

@@ -19,17 +19,17 @@ import json
 import yaml
 import time
 import logging
+import subprocess
 from datetime import datetime
 from pathlib import Path
 import numpy as np
 
 # Add YOLOv5 to path
-YOLO_PATH = Path(__file__).parent.parent.parent.parent.parent.parent / "models" / "yolov5n" / "baseline" / "yolov5"
+YOLO_PATH = Path(__file__).parent.parent.parent.parent.parent.parent.parent / "models" / "yolov5n" / "baseline" / "yolov5"
 sys.path.append(str(YOLO_PATH))
 
 try:
     import torch
-    import val as yolo_val
     from utils.general import check_requirements, colorstr
     from utils.torch_utils import select_device
     from utils.metrics import ap_per_class
@@ -43,7 +43,8 @@ class WeatherTester:
     """Weather Conditions Tester for Phase 1 Baseline Models"""
     
     def __init__(self, weights_path, conf_thres=0.001, iou_thres=0.6):
-        self.weights_path = Path(weights_path)
+        # Convert to absolute path to avoid issues when changing directories
+        self.weights_path = Path(weights_path).resolve()
         self.conf_thres = conf_thres
         self.iou_thres = iou_thres
         self.setup_paths()
@@ -231,7 +232,7 @@ class WeatherTester:
                 # Core parameters
                 data=str(temp_config),
                 weights=str(self.weights_path),
-                batch_size=32,
+                batch_size=8,
                 imgsz=640,
                 
                 # Threshold parameters
@@ -241,7 +242,7 @@ class WeatherTester:
                 # Output parameters
                 task='test',
                 device='',
-                workers=8,
+                workers=2,
                 single_cls=False,
                 augment=False,
                 verbose=True,
@@ -273,17 +274,94 @@ class WeatherTester:
             os.chdir(self.yolo_path)
             
             try:
-                # Run validation/testing
-                results = yolo_val.run(**vars(args))
+                # Run validation/testing using YOLOv5's command line interface
+                cmd = [
+                    sys.executable, "val.py",
+                    "--weights", str(args.weights),
+                    "--data", str(args.data),
+                    "--batch-size", str(args.batch_size),
+                    "--imgsz", str(args.imgsz),
+                    "--conf-thres", str(args.conf_thres),
+                    "--iou-thres", str(args.iou_thres),
+                    "--task", args.task,
+                    "--device", args.device,
+                    "--workers", str(args.workers),
+                    "--project", str(args.project),
+                    "--name", args.name,
+                    "--exist-ok",
+                    "--save-txt",
+                    "--save-conf",
+                    "--save-json"
+                ]
                 
-                # Test completed successfully
-                end_time = time.time()
-                duration = end_time - start_time
-                self.logger.info(f"[TESTING] {condition} test completed in {duration:.2f} seconds")
+                if args.verbose:
+                    cmd.append("--verbose")
+                if args.augment:
+                    cmd.append("--augment")
+                if args.half:
+                    cmd.append("--half")
+                # Note: --plots argument not supported in this YOLOv5 version
                 
-                # Extract metrics
-                metrics = self.extract_metrics(results, condition)
-                self.log_condition_metrics(condition, metrics)
+                self.logger.info(f"[TESTING] Running YOLOv5 {condition} test: {' '.join(cmd)}")
+                
+                # Execute validation with live output and recording
+                process = subprocess.Popen(
+                    cmd,
+                    cwd=self.yolo_path,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,  # Merge stderr with stdout
+                    text=True,
+                    bufsize=1,  # Line buffered
+                    universal_newlines=True
+                )
+                
+                output_lines = []
+                
+                # Stream output in real-time while capturing it
+                try:
+                    while True:
+                        output = process.stdout.readline()
+                        if output == '' and process.poll() is not None:
+                            break
+                        if output:
+                            line = output.strip()
+                            if line:  # Only process non-empty lines
+                                # Display to terminal
+                                print(f"[WEATHER-{condition.upper()}] {line}")
+                                # Log to file
+                                self.logger.info(f"[WEATHER-{condition.upper()}] {line}")
+                                # Store for parsing
+                                output_lines.append(line)
+                
+                except Exception as e:
+                    self.logger.error(f"Error reading {condition} test output: {e}")
+                
+                # Wait for process to complete
+                return_code = process.wait()
+                
+                # Create a result object
+                class WeatherTestResult:
+                    def __init__(self, returncode, stdout_lines):
+                        self.returncode = returncode
+                        self.stdout = '\n'.join(stdout_lines)
+                        self.stderr = ""  # We merged stderr with stdout
+                
+                results = WeatherTestResult(return_code, output_lines)
+                
+                # Check if test succeeded
+                if results.returncode == 0:
+                    end_time = time.time()
+                    duration = end_time - start_time
+                    self.logger.info(f"[TESTING] {condition} test completed in {duration:.2f} seconds")
+                    
+                    # Parse metrics from YOLOv5 output
+                    metrics = self.parse_yolo_results(results_dir, results.stdout, condition)
+                    self.log_condition_metrics(condition, metrics)
+                else:
+                    # Test failed
+                    self.logger.error(f"[TESTING] {condition} test failed with return code: {results.returncode}")
+                    self.logger.error(f"[TESTING] Check the output above for details")
+                    raise RuntimeError(f"YOLOv5 {condition} test failed with return code: {results.returncode}")
                 
                 # Save condition results
                 condition_results = {
@@ -308,6 +386,56 @@ class WeatherTester:
             self.logger.error(f"[TESTING] Failed testing {condition}: {str(e)}")
             raise
             
+    def parse_yolo_results(self, results_dir, stdout_output, condition):
+        """Parse YOLOv5 validation results from output and files"""
+        self.logger.info(f"[PARSING] Parsing YOLOv5 {condition} test results...")
+        
+        metrics = {
+            'map50': 0.0,
+            'map50_95': 0.0,
+            'precision': 0.0,
+            'recall': 0.0,
+            'condition': condition
+        }
+        
+        try:
+            # Parse metrics from stdout output
+            if stdout_output:
+                lines = stdout_output.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    # Look for the summary line with overall metrics
+                    if 'all' in line and len(line.split()) >= 6:
+                        parts = line.split()
+                        try:
+                            # YOLOv5 output format: Class Images Instances P R mAP50 mAP50-95
+                            if len(parts) >= 7:
+                                metrics['precision'] = float(parts[4])
+                                metrics['recall'] = float(parts[5]) 
+                                metrics['map50'] = float(parts[6])
+                                if len(parts) >= 8:
+                                    metrics['map50_95'] = float(parts[7])
+                        except (ValueError, IndexError):
+                            continue
+            
+            # Try to read results from JSON file if available
+            results_json = results_dir / "results.json"
+            if results_json.exists():
+                with open(results_json, 'r') as f:
+                    json_data = json.load(f)
+                    if isinstance(json_data, dict):
+                        metrics.update({
+                            'map50': json_data.get('metrics/mAP_0.5', metrics['map50']),
+                            'map50_95': json_data.get('metrics/mAP_0.5:0.95', metrics['map50_95']),
+                            'precision': json_data.get('metrics/precision', metrics['precision']),
+                            'recall': json_data.get('metrics/recall', metrics['recall'])
+                        })
+        
+        except Exception as e:
+            self.logger.warning(f"[PARSING] Could not parse some {condition} metrics: {e}")
+        
+        return metrics
+
     def extract_metrics(self, results, condition):
         """Extract metrics from validation results"""
         self.logger.info(f"[METRICS] Extracting metrics for {condition}...")
@@ -494,10 +622,23 @@ class WeatherTester:
                 
                 summary["summary_statistics"] = avg_degradations
         
+        # Convert WindowsPath objects to strings for JSON serialization
+        def convert_paths_to_strings(obj):
+            if isinstance(obj, dict):
+                return {key: convert_paths_to_strings(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_paths_to_strings(item) for item in obj]
+            elif isinstance(obj, Path):
+                return str(obj)
+            else:
+                return obj
+        
+        summary_serializable = convert_paths_to_strings(summary)
+        
         # Save complete results
         results_file = self.logs_dir / f"weather_testing_complete_{timestamp}.json"
         with open(results_file, 'w') as f:
-            json.dump(summary, f, indent=2)
+            json.dump(summary_serializable, f, indent=2)
             
         self.logger.info(f"[SAVE] Complete results saved to: {results_file}")
         
@@ -512,8 +653,10 @@ class WeatherTester:
                     "degradation": result.get('degradation', {})
                 }
         
+        comparison_serializable = convert_paths_to_strings(comparison)
+        
         with open(comparison_file, 'w') as f:
-            json.dump(comparison, f, indent=2)
+            json.dump(comparison_serializable, f, indent=2)
             
         self.logger.info(f"[SAVE] Comparison table saved to: {comparison_file}")
         

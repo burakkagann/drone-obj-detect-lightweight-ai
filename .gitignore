@@ -44,3 +44,25 @@ recovery-plan.md
 protocols/
 scripts/training/visdrone/YOLOv5n/phase1-baseline/back-up/
 recovery-files/
+
+# Large prediction and output files
+**/best_predictions.json
+**/predictions/
+**/test_*/
+runs/**/weather_testing*/*.json
+runs/**/test_results/
+runs/**/outputs/
+*.predictions
+
+# Large model files and weights
+*.pth
+*.safetensors
+runs/**/weights/
+runs/**/checkpoints/
+
+# Large datasets and preprocessed data  
+**/images/
+**/labels/
+**/annotations/
+data/processed/
+data/augmented/

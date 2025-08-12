@@ -31,7 +31,9 @@ from datetime import datetime
 from pathlib import Path
 
 # Add YOLOv5 to path
-YOLO_PATH = Path(__file__).parent.parent.parent.parent.parent.parent / "models" / "yolov5n" / "baseline" / "yolov5"
+script_path = Path(__file__).parent
+project_root = script_path.parent.parent.parent.parent.parent.parent
+YOLO_PATH = project_root / "models" / "yolov5n" / "baseline" / "yolov5"
 sys.path.append(str(YOLO_PATH))
 
 try:
@@ -70,6 +72,7 @@ class Phase1Trainer:
         print(f"[SETUP] Script directory: {self.script_dir}")
         print(f"[SETUP] Project root: {self.project_root}")
         print(f"[SETUP] YOLOv5 path: {self.yolo_path}")
+        print(f"[SETUP] YOLOv5 exists: {self.yolo_path.exists()}")
         print(f"[SETUP] Config directory: {self.config_dir}")
         print(f"[SETUP] Logs directory: {self.logs_dir}")
         
@@ -198,7 +201,7 @@ class Phase1Trainer:
             
             # Device and workers
             device='',
-            workers=8,
+            workers=2,
             
             # No augmentation for Phase 1 baseline
             rect=False,
@@ -228,12 +231,10 @@ class Phase1Trainer:
             entity=None,
             upload_dataset=False,
             bbox_interval=-1,
-            save_period=-1,
             quad=False,
             cos_lr=False,
             label_smoothing=0.0,
             patience=300,
-            freeze=[],
             save_dir=str(results_dir)
         )
         
@@ -268,6 +269,21 @@ class Phase1Trainer:
             os.chdir(self.yolo_path)
             
             try:
+                # Override hyperparameters file epochs if quick test
+                if self.quick_test:
+                    self.logger.info("[TRAINING] Quick Test mode: Overriding hyperparameter epochs to 5")
+                    # Load hyperparameter file and modify epochs
+                    with open(self.hyp_config, 'r') as f:
+                        hyp_data = yaml.safe_load(f)
+                    hyp_data['epochs'] = 5  # Override epochs for quick test
+                    
+                    # Save temporary hyperparameter file
+                    temp_hyp_path = self.logs_dir / "temp_hyp_quicktest.yaml"
+                    with open(temp_hyp_path, 'w') as f:
+                        yaml.dump(hyp_data, f)
+                    args.hyp = str(temp_hyp_path)
+                    self.logger.info(f"[TRAINING] Using temporary hyperparameter file: {temp_hyp_path}")
+                
                 # Run training
                 yolo_train.run(**vars(args))
                 
@@ -282,6 +298,8 @@ class Phase1Trainer:
                 
             except Exception as e:
                 self.logger.error(f"[TRAINING] Training failed: {str(e)}")
+                import traceback
+                self.logger.error(f"[TRAINING] Traceback: {traceback.format_exc()}")
                 self.save_training_summary(args, time.time() - start_time, success=False, error=str(e))
                 raise
             finally:

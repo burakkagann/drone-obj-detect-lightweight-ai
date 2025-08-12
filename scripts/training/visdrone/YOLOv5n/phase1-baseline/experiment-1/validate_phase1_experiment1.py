@@ -19,17 +19,17 @@ import json
 import yaml
 import time
 import logging
+import subprocess
 from datetime import datetime
 from pathlib import Path
 import numpy as np
 
 # Add YOLOv5 to path
-YOLO_PATH = Path(__file__).parent.parent.parent.parent.parent.parent / "models" / "yolov5n" / "baseline" / "yolov5"
+YOLO_PATH = Path(__file__).parent.parent.parent.parent.parent.parent.parent / "models" / "yolov5n" / "baseline" / "yolov5"
 sys.path.append(str(YOLO_PATH))
 
 try:
     import torch
-    import val as yolo_val
     from utils.general import check_requirements, colorstr
     from utils.torch_utils import select_device
     from utils.metrics import ap_per_class
@@ -43,7 +43,8 @@ class Phase1Validator:
     """Phase 1 Baseline Validator for comprehensive model evaluation"""
     
     def __init__(self, weights_path, conf_thres=0.001, iou_thres=0.6, task='val'):
-        self.weights_path = Path(weights_path)
+        # Convert to absolute path to avoid issues when changing directories
+        self.weights_path = Path(weights_path).resolve()
         self.conf_thres = conf_thres
         self.iou_thres = iou_thres
         self.task = task
@@ -154,7 +155,7 @@ class Phase1Validator:
             # Core parameters
             data=str(self.data_config),
             weights=str(self.weights_path),
-            batch_size=32,
+            batch_size=4,
             imgsz=640,
             
             # Threshold parameters
@@ -164,7 +165,7 @@ class Phase1Validator:
             # Output parameters
             task=self.task,
             device='',
-            workers=8,
+            workers=2,
             single_cls=False,
             augment=False,
             verbose=True,
@@ -182,7 +183,6 @@ class Phase1Validator:
             half=False,
             dnn=False,
             plots=True,
-            wandb_logger=None,
             compute_loss=None,
             
             # Callback parameters
@@ -216,21 +216,98 @@ class Phase1Validator:
             os.chdir(self.yolo_path)
             
             try:
-                # Run validation
-                results = yolo_val.run(**vars(args))
+                # Run validation using YOLOv5's command line interface
+                cmd = [
+                    sys.executable, "val.py",
+                    "--weights", str(args.weights),
+                    "--data", str(args.data),
+                    "--batch-size", str(args.batch_size),
+                    "--imgsz", str(args.imgsz),
+                    "--conf-thres", str(args.conf_thres),
+                    "--iou-thres", str(args.iou_thres),
+                    "--task", args.task,
+                    "--device", args.device,
+                    "--workers", str(args.workers),
+                    "--project", str(args.project),
+                    "--name", args.name,
+                    "--exist-ok",
+                    "--save-txt",
+                    "--save-conf",
+                    "--save-json"
+                ]
                 
-                # Validation completed successfully
-                end_time = time.time()
-                duration = end_time - start_time
-                self.logger.info(f"[VALIDATION] Validation completed successfully")
-                self.logger.info(f"[VALIDATION] Duration: {duration:.2f} seconds")
+                if args.verbose:
+                    cmd.append("--verbose")
+                if args.augment:
+                    cmd.append("--augment")
+                if args.half:
+                    cmd.append("--half")
+                # Note: --plots argument not supported in this YOLOv5 version
                 
-                # Extract and log metrics
-                metrics = self.extract_metrics(results)
-                self.log_detailed_metrics(metrics)
+                self.logger.info(f"[VALIDATION] Running YOLOv5 validation: {' '.join(cmd)}")
                 
-                # Save comprehensive results
-                self.save_validation_results(args, results, metrics, duration, results_dir)
+                # Execute validation with live output and recording
+                process = subprocess.Popen(
+                    cmd,
+                    cwd=self.yolo_path,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,  # Merge stderr with stdout
+                    text=True,
+                    bufsize=1,  # Line buffered
+                    universal_newlines=True
+                )
+                
+                output_lines = []
+                
+                # Stream output in real-time while capturing it
+                try:
+                    while True:
+                        output = process.stdout.readline()
+                        if output == '' and process.poll() is not None:
+                            break
+                        if output:
+                            line = output.strip()
+                            if line:  # Only process non-empty lines
+                                # Display to terminal
+                                print(f"[VALIDATION] {line}")
+                                # Log to file
+                                self.logger.info(f"[VALIDATION] {line}")
+                                # Store for parsing
+                                output_lines.append(line)
+                
+                except Exception as e:
+                    self.logger.error(f"Error reading validation output: {e}")
+                
+                # Wait for process to complete
+                return_code = process.wait()
+                
+                # Create a result object similar to subprocess.run
+                class ValidationResult:
+                    def __init__(self, returncode, stdout_lines):
+                        self.returncode = returncode
+                        self.stdout = '\n'.join(stdout_lines)
+                        self.stderr = ""  # We merged stderr with stdout
+                
+                result = ValidationResult(return_code, output_lines)
+                
+                # Check if validation succeeded
+                if result.returncode == 0:
+                    end_time = time.time()
+                    duration = end_time - start_time
+                    self.logger.info(f"[VALIDATION] Validation completed successfully")
+                    self.logger.info(f"[VALIDATION] Duration: {duration:.2f} seconds")
+                    
+                    # Parse results from YOLOv5 output or result files
+                    metrics = self.parse_yolo_results(results_dir, result.stdout)
+                    self.log_detailed_metrics(metrics)
+                    
+                    # Save comprehensive results
+                    self.save_validation_results(args, result, metrics, duration, results_dir)
+                else:
+                    # Validation failed
+                    self.logger.error(f"[VALIDATION] YOLOv5 validation failed with return code: {result.returncode}")
+                    self.logger.error(f"[VALIDATION] Check the output above for details")
+                    raise RuntimeError(f"YOLOv5 validation failed with return code: {result.returncode}")
                 
                 return metrics
                 
@@ -245,6 +322,56 @@ class Phase1Validator:
             self.logger.error(f"[ERROR] Validation process failed: {str(e)}")
             raise
             
+    def parse_yolo_results(self, results_dir, stdout_output):
+        """Parse YOLOv5 validation results from output and files"""
+        self.logger.info("[PARSING] Parsing YOLOv5 validation results...")
+        
+        metrics = {
+            'map50': 0.0,
+            'map50_95': 0.0,
+            'precision': 0.0,
+            'recall': 0.0,
+            'class_metrics': {}
+        }
+        
+        try:
+            # Parse metrics from stdout output
+            if stdout_output:
+                lines = stdout_output.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    # Look for the summary line with overall metrics
+                    if 'all' in line and len(line.split()) >= 6:
+                        parts = line.split()
+                        try:
+                            # YOLOv5 output format: Class Images Instances P R mAP50 mAP50-95
+                            if len(parts) >= 7:
+                                metrics['precision'] = float(parts[4])
+                                metrics['recall'] = float(parts[5]) 
+                                metrics['map50'] = float(parts[6])
+                                if len(parts) >= 8:
+                                    metrics['map50_95'] = float(parts[7])
+                        except (ValueError, IndexError):
+                            continue
+            
+            # Try to read results from JSON file if available
+            results_json = results_dir / "results.json"
+            if results_json.exists():
+                with open(results_json, 'r') as f:
+                    json_data = json.load(f)
+                    if isinstance(json_data, dict):
+                        metrics.update({
+                            'map50': json_data.get('metrics/mAP_0.5', metrics['map50']),
+                            'map50_95': json_data.get('metrics/mAP_0.5:0.95', metrics['map50_95']),
+                            'precision': json_data.get('metrics/precision', metrics['precision']),
+                            'recall': json_data.get('metrics/recall', metrics['recall'])
+                        })
+        
+        except Exception as e:
+            self.logger.warning(f"[PARSING] Could not parse some metrics: {e}")
+        
+        return metrics
+
     def extract_metrics(self, results):
         """Extract detailed metrics from validation results"""
         self.logger.info("[METRICS] Extracting validation metrics...")
