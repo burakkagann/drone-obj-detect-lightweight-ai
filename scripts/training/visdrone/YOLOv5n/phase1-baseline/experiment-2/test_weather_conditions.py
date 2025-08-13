@@ -79,16 +79,30 @@ class WeatherTester:
         
     def get_phase_weights(self, phase: str) -> Path:
         """Get weights path for specific training phase"""
-        phase_name = f"exp2_phase{phase}"
-        weights_path = SCRIPT_DIR / "logs&results" / "training" / phase_name / "weights" / "best.pt"
+        # Try different naming patterns (quicktest vs full)
+        possible_names = [
+            f"exp2_phase{phase}_quicktest",  # Quick test mode
+            f"exp2_phase{phase}",           # Full mode
+        ]
         
-        if not weights_path.exists():
+        for phase_name in possible_names:
+            weights_path = SCRIPT_DIR / "logs&results" / "training" / phase_name / "weights" / "best.pt"
+            if weights_path.exists():
+                return weights_path
+                
+            # Try last.pt as fallback
             weights_path = SCRIPT_DIR / "logs&results" / "training" / phase_name / "weights" / "last.pt"
-            
-        if not weights_path.exists():
-            raise FileNotFoundError(f"No weights found for phase {phase} at {weights_path}")
-            
-        return weights_path
+            if weights_path.exists():
+                return weights_path
+        
+        # If nothing found, provide helpful error message
+        training_dir = SCRIPT_DIR / "logs&results" / "training"
+        available_dirs = [d.name for d in training_dir.iterdir() if d.is_dir()]
+        raise FileNotFoundError(
+            f"No weights found for phase {phase}. "
+            f"Tried: {possible_names}. "
+            f"Available directories: {available_dirs}"
+        )
         
     def setup_paths(self):
         """Setup all required paths"""
@@ -199,21 +213,57 @@ class WeatherTester:
         """Create temporary data YAML for specific condition"""
         condition_info = self.valid_conditions[condition]
         
-        # Create temp config
-        temp_config = {
-            'path': str(condition_info['data_path'].parent.parent),
-            'train': '../train/images',  # Not used for testing
-            'val': '../val/images',  # Not used for testing
-            'test': str(condition_info['data_path'].relative_to(condition_info['data_path'].parent.parent)) + '/images',
-            'nc': self.num_classes,
-            'names': self.class_names
-        }
-        
-        # Save temp YAML
-        temp_yaml_path = self.logs_dir / f"temp_data_{condition}.yaml"
-        with open(temp_yaml_path, 'w') as f:
-            yaml.dump(temp_config, f)
+        # For clean (baseline), use the raw VisDrone structure
+        if condition == 'clean':
+            # Clean data is in raw/visdrome/VisDrone2019-DET-test-dev
+            test_images_path = condition_info['data_path'] / 'images'
             
+            # Create temp config with absolute paths to avoid path resolution issues
+            temp_config = {
+                'path': str(condition_info['data_path'].parent),  # Points to visdrone folder
+                'train': str(condition_info['data_path'].parent / 'VisDrone2019-DET-train' / 'images'),
+                'val': str(condition_info['data_path'].parent / 'VisDrone2019-DET-val' / 'images'),
+                'test': str(test_images_path),  # Absolute path to test images
+                'nc': self.num_classes,
+                'names': self.class_names
+            }
+        else:
+            # For synthetic weather conditions
+            test_images_path = condition_info['data_path'] / 'images'
+            
+            # Use absolute paths for synthetic datasets
+            temp_config = {
+                'path': str(condition_info['data_path'].parent),  # Points to synthetic_test folder
+                'train': str(self.clean_data_root / 'VisDrone2019-DET-train' / 'images'),
+                'val': str(self.clean_data_root / 'VisDrone2019-DET-val' / 'images'),
+                'test': str(test_images_path),  # Absolute path to synthetic test images
+                'nc': self.num_classes,
+                'names': self.class_names
+            }
+        
+        # Save temp YAML (always overwrite to ensure fresh config)
+        temp_yaml_path = self.logs_dir / f"temp_data_{condition}.yaml"
+        
+        # Force overwrite even if file exists
+        if temp_yaml_path.exists():
+            self.logger.info(f"Overwriting existing temp YAML: {temp_yaml_path}")
+            
+        with open(temp_yaml_path, 'w') as f:
+            yaml.dump(temp_config, f, default_flow_style=False)
+            
+        # Log the created config for debugging
+        self.logger.info(f"Created temp YAML for {condition}:")
+        self.logger.info(f"  Path: {temp_config['path']}")
+        self.logger.info(f"  Train: {temp_config['train']}")
+        self.logger.info(f"  Val: {temp_config['val']}")
+        self.logger.info(f"  Test: {temp_config['test']}")
+        
+        # Verify paths exist
+        if not Path(temp_config['test']).exists():
+            self.logger.warning(f"Test path does not exist: {temp_config['test']}")
+        if not Path(temp_config['val']).exists():
+            self.logger.warning(f"Val path does not exist: {temp_config['val']}")
+        
         return temp_yaml_path
         
     def test_weather_condition(self, condition: str, condition_info: Dict) -> Dict:
@@ -233,7 +283,7 @@ class WeatherTester:
             str(self.yolo_path / "val.py"),
             "--weights", str(self.weights_path),
             "--data", str(temp_data_yaml),
-            "--batch-size", "4",  # Conservative for weather testing
+            "--batch-size", "8",  # Increased for faster testing
             "--imgsz", "640",
             "--conf-thres", str(self.conf_thres),
             "--iou-thres", str(self.iou_thres),
@@ -256,19 +306,40 @@ class WeatherTester:
         
         try:
             self.logger.info(f"[WEATHER-{condition.upper()}] Running YOLOv5 validation...")
+            self.logger.info(f"[WEATHER-{condition.upper()}] This may take a few minutes...")
             
-            result = subprocess.run(
+            # Run with real-time output
+            process = subprocess.Popen(
                 cmd,
                 cwd=str(self.yolo_path),
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True,
-                check=True
+                bufsize=1,
+                universal_newlines=True
             )
+            
+            # Stream output in real-time
+            output_lines = []
+            for line in iter(process.stdout.readline, ''):
+                if line:
+                    print(line.rstrip())  # Show in terminal
+                    output_lines.append(line.rstrip())
+                    
+            process.wait()
+            
+            # Check return code
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(
+                    process.returncode, cmd, 
+                    output='\n'.join(output_lines)
+                )
             
             duration = time.time() - start_time
             
             # Parse results
-            metrics = self.parse_test_output(result.stdout, condition)
+            output_text = '\n'.join(output_lines)
+            metrics = self.parse_test_output(output_text, condition)
             
             # Log results
             self.logger.info(f"[TESTING] {condition} test completed in {duration:.2f} seconds")
@@ -292,8 +363,8 @@ class WeatherTester:
             
         except subprocess.CalledProcessError as e:
             self.logger.error(f"[ERROR] Test failed for {condition}: {str(e)}")
-            if e.stderr:
-                self.logger.error(f"[ERROR] stderr: {e.stderr}")
+            if hasattr(e, 'output') and e.output:
+                self.logger.error(f"[ERROR] Output: {e.output[:500]}...")  # Show first 500 chars
             return {
                 'condition': condition,
                 'error': str(e),
@@ -318,17 +389,21 @@ class WeatherTester:
                     self.logger.info(f"[WEATHER-{condition.upper()}] {line}")
                     
                 # Parse metrics from "all" summary line
-                if 'all' in line and len(line.split()) >= 10:
+                if 'all' in line and len(line.split()) >= 6:
                     parts = line.split()
+                    self.logger.debug(f"Parsing line parts: {parts}")
                     try:
-                        # Standard YOLOv5 output format
-                        # Format: Class Images Labels P R mAP@.5 mAP@.5:.95
-                        metrics['precision'] = float(parts[4]) if len(parts) > 4 else 0.0
-                        metrics['recall'] = float(parts[5]) if len(parts) > 5 else 0.0
-                        metrics['map50'] = float(parts[6]) if len(parts) > 6 else 0.0
-                        metrics['map50_95'] = float(parts[7]) if len(parts) > 7 else 0.0
+                        # YOLOv5 output format: 'all' Images Instances P R mAP@.5 mAP@.5:.95
+                        # From log: all 1610 75102 0.351 0.191 0.152 0.0715
+                        if parts[0].strip() == 'all':
+                            metrics['precision'] = float(parts[3]) if len(parts) > 3 else 0.0
+                            metrics['recall'] = float(parts[4]) if len(parts) > 4 else 0.0
+                            metrics['map50'] = float(parts[5]) if len(parts) > 5 else 0.0
+                            metrics['map50_95'] = float(parts[6]) if len(parts) > 6 else 0.0
+                            self.logger.info(f"Successfully parsed metrics from: {line.strip()}")
                     except (ValueError, IndexError) as e:
                         self.logger.warning(f"Could not parse metrics line: {line}")
+                        self.logger.warning(f"Parts: {parts}")
                         
         except Exception as e:
             self.logger.error(f"[PARSING] Error parsing output for {condition}: {e}")

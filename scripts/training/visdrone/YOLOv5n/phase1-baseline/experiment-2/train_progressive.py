@@ -127,6 +127,14 @@ class ProgressiveTrainer:
         )
         self.logger = logging.getLogger(__name__)
         
+        # Setup separate metrics logger for real-time tracking
+        self.metrics_logger = logging.getLogger('metrics')
+        metrics_file = LOGS_DIR / f"metrics_tracking_{timestamp}.log"
+        metrics_handler = logging.FileHandler(metrics_file)
+        metrics_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+        self.metrics_logger.addHandler(metrics_handler)
+        self.metrics_logger.setLevel(logging.INFO)
+        
         self.logger.info("="*80)
         self.logger.info("YOLOv5n VisDrone Experiment 2 - Progressive Training")
         if self.quick_test:
@@ -303,11 +311,54 @@ class ProgressiveTrainer:
                 df = pd.read_csv(results_file)
                 if len(df) > 0:
                     last_row = df.iloc[-1]
-                    summary["final_metrics"] = {
-                        "mAP_0.5": float(last_row['   metrics/mAP_0.5']) if '   metrics/mAP_0.5' in df.columns else None,
-                        "precision": float(last_row['metrics/precision']) if 'metrics/precision' in df.columns else None,
-                        "recall": float(last_row['metrics/recall']) if 'metrics/recall' in df.columns else None
-                    }
+                    
+                    # Robust column matching - handle varying spaces in column names
+                    metrics = {}
+                    for col in df.columns:
+                        col_clean = col.strip().lower()
+                        
+                        # mAP@0.5 (but not mAP@0.5:0.95)
+                        if 'map_0.5' in col_clean and 'map_0.5:0.95' not in col_clean:
+                            metrics['mAP_0.5'] = float(last_row[col])
+                        # mAP@0.5:0.95
+                        elif 'map_0.5:0.95' in col_clean:
+                            metrics['mAP_0.5:0.95'] = float(last_row[col])
+                        # Precision
+                        elif 'precision' in col_clean and 'metrics' in col_clean:
+                            metrics['precision'] = float(last_row[col])
+                        # Recall
+                        elif 'recall' in col_clean and 'metrics' in col_clean:
+                            metrics['recall'] = float(last_row[col])
+                        # Training losses
+                        elif 'train/box_loss' in col_clean:
+                            metrics['box_loss'] = float(last_row[col])
+                        elif 'train/obj_loss' in col_clean:
+                            metrics['obj_loss'] = float(last_row[col])
+                        elif 'train/cls_loss' in col_clean:
+                            metrics['cls_loss'] = float(last_row[col])
+                    
+                    summary["final_metrics"] = metrics
+                    
+                    # Log metrics to dedicated metrics logger
+                    self.metrics_logger.info(
+                        f"Phase={phase_key.upper()} "
+                        f"Status={status} "
+                        f"Duration={duration:.2f}h "
+                        f"mAP@0.5={metrics.get('mAP_0.5', 'N/A')} "
+                        f"Precision={metrics.get('precision', 'N/A')} "
+                        f"Recall={metrics.get('recall', 'N/A')} "
+                        f"mAP@0.5:0.95={metrics.get('mAP_0.5:0.95', 'N/A')}"
+                    )
+                    
+                    # Also get best metrics from entire training
+                    if 'mAP_0.5' in metrics:
+                        best_idx = df[[c for c in df.columns if 'map_0.5' in c.lower() and 'map_0.5:0.95' not in c.lower()][0]].idxmax()
+                        best_row = df.iloc[best_idx]
+                        summary["best_metrics"] = {
+                            "epoch": int(best_row['epoch']) if 'epoch' in df.columns else best_idx,
+                            "mAP_0.5": float(best_row[[c for c in df.columns if 'map_0.5' in c.lower() and 'map_0.5:0.95' not in c.lower()][0]])
+                        }
+                        
             except Exception as e:
                 self.logger.warning(f"Could not read results.csv: {e}")
                 
