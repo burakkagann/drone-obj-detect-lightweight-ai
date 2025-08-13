@@ -1,0 +1,250 @@
+{
+  "experiment": "phase1_baseline_experiment1_weather_testing",
+  "timestamp": "2025-08-13T13:43:58.928583",
+  "model_info": {
+    "weights": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\training\\phase1_baseline_exp1_20250813_021329\\weights\\best.pt",
+    "model_type": "yolov5n",
+    "dataset": "visdrone_synthetic_weather"
+  },
+  "testing_config": {
+    "conf_threshold": 0.001,
+    "iou_threshold": 0.6,
+    "conditions_tested": [
+      "clean",
+      "fog",
+      "rain",
+      "night",
+      "mixed"
+    ]
+  },
+  "baseline_metrics": {
+    "map50": 0.0736,
+    "map50_95": 0.0,
+    "precision": 0.206,
+    "recall": 0.153,
+    "condition": "clean"
+  },
+  "weather_results": {
+    "clean": {
+      "condition": "clean",
+      "condition_info": {
+        "name": "Clean (Baseline)",
+        "description": "Original clean test dataset",
+        "data_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\data\\raw\\visdrone\\VisDrone2019-DET-test-dev",
+        "image_count": 1610
+      },
+      "metrics": {
+        "map50": 0.0736,
+        "map50_95": 0.0,
+        "precision": 0.206,
+        "recall": 0.153,
+        "condition": "clean"
+      },
+      "duration_seconds": 425.9692270755768,
+      "timestamp": "2025-08-13T13:15:30.166979",
+      "results_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\weather_testing\\clean_results_20250813_130824"
+    },
+    "fog": {
+      "condition": "fog",
+      "condition_info": {
+        "name": "Fog Synthetic",
+        "description": "Synthetic fog augmented test dataset",
+        "data_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\data\\synthetic_test\\VisDrone2019-DET-test-fog",
+        "image_count": 1610
+      },
+      "metrics": {
+        "map50": 0.0019,
+        "map50_95": 0.0,
+        "precision": 0.0159,
+        "recall": 0.00397,
+        "condition": "fog"
+      },
+      "duration_seconds": 448.4182415008545,
+      "timestamp": "2025-08-13T13:22:58.592385",
+      "results_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\weather_testing\\fog_results_20250813_131530",
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.0717,
+          "relative_drop_percent": 97.41847826086956,
+          "baseline_value": 0.0736,
+          "condition_value": 0.0019
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.1901,
+          "relative_drop_percent": 92.28155339805826,
+          "baseline_value": 0.206,
+          "condition_value": 0.0159
+        },
+        "recall": {
+          "absolute_drop": 0.14903,
+          "relative_drop_percent": 97.40522875816994,
+          "baseline_value": 0.153,
+          "condition_value": 0.00397
+        }
+      }
+    },
+    "rain": {
+      "condition": "rain",
+      "condition_info": {
+        "name": "Rain Synthetic",
+        "description": "Synthetic rain augmented test dataset",
+        "data_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\data\\synthetic_test\\VisDrone2019-DET-test-rain",
+        "image_count": 1610
+      },
+      "metrics": {
+        "map50": 0.00279,
+        "map50_95": 0.0,
+        "precision": 0.0211,
+        "recall": 0.00569,
+        "condition": "rain"
+      },
+      "duration_seconds": 443.9489324092865,
+      "timestamp": "2025-08-13T13:30:22.547922",
+      "results_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\weather_testing\\rain_results_20250813_132258",
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.07081,
+          "relative_drop_percent": 96.20923913043478,
+          "baseline_value": 0.0736,
+          "condition_value": 0.00279
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.18489999999999998,
+          "relative_drop_percent": 89.75728155339804,
+          "baseline_value": 0.206,
+          "condition_value": 0.0211
+        },
+        "recall": {
+          "absolute_drop": 0.14731,
+          "relative_drop_percent": 96.28104575163398,
+          "baseline_value": 0.153,
+          "condition_value": 0.00569
+        }
+      }
+    },
+    "night": {
+      "condition": "night",
+      "condition_info": {
+        "name": "Night Synthetic",
+        "description": "Synthetic night/low-light test dataset",
+        "data_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\data\\synthetic_test\\VisDrone2019-DET-test-night",
+        "image_count": 1610
+      },
+      "metrics": {
+        "map50": 0.0023,
+        "map50_95": 0.0,
+        "precision": 0.0178,
+        "recall": 0.00514,
+        "condition": "night"
+      },
+      "duration_seconds": 411.86971521377563,
+      "timestamp": "2025-08-13T13:37:14.424952",
+      "results_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\weather_testing\\night_results_20250813_133022",
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.0713,
+          "relative_drop_percent": 96.875,
+          "baseline_value": 0.0736,
+          "condition_value": 0.0023
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.18819999999999998,
+          "relative_drop_percent": 91.35922330097087,
+          "baseline_value": 0.206,
+          "condition_value": 0.0178
+        },
+        "recall": {
+          "absolute_drop": 0.14786,
+          "relative_drop_percent": 96.640522875817,
+          "baseline_value": 0.153,
+          "condition_value": 0.00514
+        }
+      }
+    },
+    "mixed": {
+      "condition": "mixed",
+      "condition_info": {
+        "name": "Mixed Conditions",
+        "description": "Mixed weather conditions test dataset",
+        "data_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\data\\synthetic_test\\VisDrone2019-DET-test-mixed",
+        "image_count": 1610
+      },
+      "metrics": {
+        "map50": 0.00231,
+        "map50_95": 0.0,
+        "precision": 0.0154,
+        "recall": 0.00514,
+        "condition": "mixed"
+      },
+      "duration_seconds": 404.4938292503357,
+      "timestamp": "2025-08-13T13:43:58.925476",
+      "results_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\weather_testing\\mixed_results_20250813_133714",
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.07128999999999999,
+          "relative_drop_percent": 96.86141304347825,
+          "baseline_value": 0.0736,
+          "condition_value": 0.00231
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.1906,
+          "relative_drop_percent": 92.5242718446602,
+          "baseline_value": 0.206,
+          "condition_value": 0.0154
+        },
+        "recall": {
+          "absolute_drop": 0.14786,
+          "relative_drop_percent": 96.640522875817,
+          "baseline_value": 0.153,
+          "condition_value": 0.00514
+        }
+      }
+    }
+  },
+  "summary_statistics": {
+    "map50": {
+      "mean_degradation_percent": 96.84103260869566,
+      "max_degradation_percent": 97.41847826086956,
+      "min_degradation_percent": 96.20923913043478
+    },
+    "map50_95": {
+      "mean_degradation_percent": 0.0,
+      "max_degradation_percent": 0.0,
+      "min_degradation_percent": 0.0
+    },
+    "precision": {
+      "mean_degradation_percent": 91.48058252427185,
+      "max_degradation_percent": 92.5242718446602,
+      "min_degradation_percent": 89.75728155339804
+    },
+    "recall": {
+      "mean_degradation_percent": 96.74183006535948,
+      "max_degradation_percent": 97.40522875816994,
+      "min_degradation_percent": 96.28104575163398
+    }
+  }
+}

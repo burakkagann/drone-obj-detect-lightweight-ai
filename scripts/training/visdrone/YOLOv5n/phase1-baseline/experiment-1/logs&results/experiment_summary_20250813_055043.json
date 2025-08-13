@@ -1,0 +1,46 @@
+{
+  "experiment_id": "phase1_baseline_experiment1_20250813_055043",
+  "experiment_type": "phase1_baseline",
+  "model": "yolov5n",
+  "dataset": "visdrone",
+  "timestamp": "2025-08-13T05:50:43.357012",
+  "configuration": {
+    "quick_test": false,
+    "skip_training": false,
+    "optimizations_applied": [
+      "SGD optimizer (vs AdamW)",
+      "batch_size=8 (fixed)",
+      "50 epochs duration",
+      "loss_weights cls=0.3, obj=0.7",
+      "zero_augmentation (Phase 1 requirement)"
+    ]
+  },
+  "phases_executed": [
+    "training",
+    "validation",
+    "weather_testing"
+  ],
+  "overall_success": true,
+  "results": {
+    "training": {
+      "success": true,
+      "duration_hours": 2.886970200339953,
+      "mode": "full",
+      "weights_path": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\training\\phase1_baseline_exp1_20250813_021329\\weights\\best.pt",
+      "timestamp": "2025-08-13T05:06:25.661459"
+    },
+    "validation": {
+      "success": true,
+      "duration_seconds": 216.47770762443542,
+      "weights_used": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\training\\phase1_baseline_exp1_20250813_021329\\weights\\best.pt",
+      "metrics": {},
+      "timestamp": "2025-08-13T05:10:02.141660"
+    },
+    "weather_testing": {
+      "success": true,
+      "duration_minutes": 40.68688320318858,
+      "weights_used": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\training\\phase1_baseline_exp1_20250813_021329\\weights\\best.pt",
+      "timestamp": "2025-08-13T05:50:43.355728"
+    }
+  }
+}

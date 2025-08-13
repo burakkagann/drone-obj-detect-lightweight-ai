@@ -1,0 +1,161 @@
+{
+  "baseline": {
+    "map50": 0.0737,
+    "map50_95": 0.0,
+    "precision": 0.205,
+    "recall": 0.154,
+    "condition": "clean"
+  },
+  "conditions": {
+    "clean": {
+      "metrics": {
+        "map50": 0.0737,
+        "map50_95": 0.0,
+        "precision": 0.205,
+        "recall": 0.154,
+        "condition": "clean"
+      },
+      "degradation": {}
+    },
+    "fog": {
+      "metrics": {
+        "map50": 0.0019,
+        "map50_95": 0.0,
+        "precision": 0.0159,
+        "recall": 0.00397,
+        "condition": "fog"
+      },
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.0718,
+          "relative_drop_percent": 97.42198100407056,
+          "baseline_value": 0.0737,
+          "condition_value": 0.0019
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.1891,
+          "relative_drop_percent": 92.2439024390244,
+          "baseline_value": 0.205,
+          "condition_value": 0.0159
+        },
+        "recall": {
+          "absolute_drop": 0.15003,
+          "relative_drop_percent": 97.42207792207792,
+          "baseline_value": 0.154,
+          "condition_value": 0.00397
+        }
+      }
+    },
+    "rain": {
+      "metrics": {
+        "map50": 0.00279,
+        "map50_95": 0.0,
+        "precision": 0.0211,
+        "recall": 0.00569,
+        "condition": "rain"
+      },
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.07091,
+          "relative_drop_percent": 96.21438263229308,
+          "baseline_value": 0.0737,
+          "condition_value": 0.00279
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.18389999999999998,
+          "relative_drop_percent": 89.70731707317073,
+          "baseline_value": 0.205,
+          "condition_value": 0.0211
+        },
+        "recall": {
+          "absolute_drop": 0.14831,
+          "relative_drop_percent": 96.3051948051948,
+          "baseline_value": 0.154,
+          "condition_value": 0.00569
+        }
+      }
+    },
+    "night": {
+      "metrics": {
+        "map50": 0.0023,
+        "map50_95": 0.0,
+        "precision": 0.0178,
+        "recall": 0.00514,
+        "condition": "night"
+      },
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.0714,
+          "relative_drop_percent": 96.87924016282226,
+          "baseline_value": 0.0737,
+          "condition_value": 0.0023
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.18719999999999998,
+          "relative_drop_percent": 91.3170731707317,
+          "baseline_value": 0.205,
+          "condition_value": 0.0178
+        },
+        "recall": {
+          "absolute_drop": 0.14886,
+          "relative_drop_percent": 96.66233766233766,
+          "baseline_value": 0.154,
+          "condition_value": 0.00514
+        }
+      }
+    },
+    "mixed": {
+      "metrics": {
+        "map50": 0.00231,
+        "map50_95": 0.0,
+        "precision": 0.0154,
+        "recall": 0.00514,
+        "condition": "mixed"
+      },
+      "degradation": {
+        "map50": {
+          "absolute_drop": 0.07139,
+          "relative_drop_percent": 96.86567164179104,
+          "baseline_value": 0.0737,
+          "condition_value": 0.00231
+        },
+        "map50_95": {
+          "absolute_drop": 0.0,
+          "relative_drop_percent": 0.0,
+          "baseline_value": 0.0,
+          "condition_value": 0.0
+        },
+        "precision": {
+          "absolute_drop": 0.1896,
+          "relative_drop_percent": 92.48780487804879,
+          "baseline_value": 0.205,
+          "condition_value": 0.0154
+        },
+        "recall": {
+          "absolute_drop": 0.14886,
+          "relative_drop_percent": 96.66233766233766,
+          "baseline_value": 0.154,
+          "condition_value": 0.00514
+        }
+      }
+    }
+  }
+}

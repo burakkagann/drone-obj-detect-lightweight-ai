@@ -1,0 +1,44 @@
+{
+  "experiment": "phase1_baseline_experiment1_validation",
+  "timestamp": "2025-08-13T05:10:01.224152",
+  "duration_seconds": 200.98039031028748,
+  "model_info": {
+    "weights": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\training\\phase1_baseline_exp1_20250813_021329\\weights\\best.pt",
+    "model_type": "yolov5n",
+    "dataset": "visdrone",
+    "task": "val"
+  },
+  "validation_config": {
+    "conf_threshold": 0.001,
+    "iou_threshold": 0.6,
+    "batch_size": 4,
+    "image_size": 640,
+    "augmentation": false
+  },
+  "metrics": {
+    "mAP_50": 0.086,
+    "mAP_50_95": 0.0,
+    "precision": 0.212,
+    "recall": 0.178,
+    "mAP_50_percentage": 8.6,
+    "mAP_50_95_percentage": 0.0,
+    "precision_percentage": 21.2,
+    "recall_percentage": 17.8
+  },
+  "dataset_info": {
+    "num_classes": 10,
+    "class_names": {
+      "0": "pedestrian",
+      "1": "people",
+      "2": "bicycle",
+      "3": "car",
+      "4": "van",
+      "5": "truck",
+      "6": "tricycle",
+      "7": "awning-tricycle",
+      "8": "bus",
+      "9": "motor"
+    }
+  },
+  "results_directory": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\validation\\validation_results_20250813_050640"
+}

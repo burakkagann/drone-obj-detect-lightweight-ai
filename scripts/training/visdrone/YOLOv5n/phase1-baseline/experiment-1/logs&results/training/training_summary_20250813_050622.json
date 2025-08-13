@@ -1,0 +1,26 @@
+{
+  "experiment": "phase1_baseline_experiment1",
+  "timestamp": "2025-08-13T05:06:22.425458",
+  "mode": "full_training",
+  "success": true,
+  "duration_hours": 2.8813257153828937,
+  "configuration": {
+    "epochs": 50,
+    "batch_size": 8,
+    "optimizer": "SGD",
+    "learning_rate": 0.01,
+    "loss_weights": {
+      "cls": 0.3,
+      "obj": 0.7
+    },
+    "model": "yolov5n",
+    "dataset": "visdrone",
+    "augmentation": "disabled"
+  },
+  "paths": {
+    "weights": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\models\\yolov5n\\baseline\\yolov5\\yolov5n.pt",
+    "data_config": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\configs\\yolov5n-visdrone\\visdrone_experiment1.yaml",
+    "hyp_config": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\configs\\yolov5n-visdrone\\experiment1_training_config.yaml",
+    "results_dir": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\scripts\\training\\visdrone\\YOLOv5n\\phase1-baseline\\experiment-1\\logs&results\\training\\phase1_baseline_exp1_20250813_021329"
+  }
+}

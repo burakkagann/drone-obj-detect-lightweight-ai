@@ -2,64 +2,64 @@ weights: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-
 cfg: ''
 data: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\configs\yolov5n-visdrone\visdrone_experiment1.yaml
 hyp:
-  amp: true
-  anchor_t: 4.0
-  anchors: 3
+  epochs: 50
   batch_size: 8
-  box: 0.05
-  box_loss_gain: 0.05
-  cache: false
+  optimizer: SGD
+  lr0: 0.01
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
   cls: 0.3
-  cls_loss_gain: 0.3
-  cls_pw: 1.0
-  conf_thres: 0.001
-  copy_paste: 0.0
+  obj: 0.7
+  box: 0.05
+  anchor_t: 4.0
   cos_lr: false
-  degrees: 0.0
-  deterministic: true
-  epochs: 5
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  anchors: 3
   fl_gamma: 0.0
-  fliplr: 0.0
-  flipud: 0.0
+  img_size: 640
+  rect: false
   hsv_h: 0.0
   hsv_s: 0.0
   hsv_v: 0.0
-  image_weights: false
-  img_size: 640
-  iou_t: 0.2
-  iou_thres: 0.6
-  label_smoothing: 0.0
-  lr0: 0.01
-  lrf: 0.01
-  mask_ratio: 4
-  max_det: 300
-  mixup: 0.0
-  momentum: 0.937
-  mosaic: 0.0
-  multi_scale: false
-  name: experiment1-baseline
-  obj: 0.7
-  obj_loss_gain: 0.7
-  obj_pw: 1.0
-  optimizer: SGD
-  overlap_mask: true
-  patience: 300
-  perspective: 0.0
-  project: yolov5n-visdrone-phase1
-  quad: false
-  rect: false
-  save_period: -1
+  degrees: 0.0
+  translate: 0.0
   scale: 0.0
   shear: 0.0
-  single_cls: false
-  sync_bn: false
-  translate: 0.0
-  warmup_bias_lr: 0.1
-  warmup_epochs: 3.0
-  warmup_momentum: 0.8
-  weight_decay: 0.0005
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.0
+  mosaic: 0.0
+  mixup: 0.0
+  copy_paste: 0.0
+  label_smoothing: 0.0
   workers: 8
-epochs: 5
+  cache: false
+  image_weights: false
+  multi_scale: false
+  single_cls: false
+  overlap_mask: true
+  mask_ratio: 4
+  iou_t: 0.2
+  cls_pw: 1.0
+  obj_pw: 1.0
+  box_loss_gain: 0.05
+  cls_loss_gain: 0.3
+  obj_loss_gain: 0.7
+  conf_thres: 0.001
+  iou_thres: 0.6
+  max_det: 300
+  save_period: -1
+  patience: 300
+  amp: true
+  sync_bn: false
+  quad: false
+  deterministic: true
+  project: yolov5n-visdrone-phase1
+  name: experiment1-baseline
+epochs: 50
 batch_size: 8
 imgsz: 640
 rect: false
@@ -81,7 +81,7 @@ optimizer: SGD
 sync_bn: false
 workers: 2
 project: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\scripts\training\visdrone\YOLOv5n\phase1-baseline\experiment-1\logs&results\training
-name: phase1_quicktest_exp1_20250813_014210
+name: phase1_baseline_exp1_20250813_021329
 exist_ok: false
 quad: false
 cos_lr: false
@@ -106,4 +106,4 @@ cls: 0.3
 obj: 0.7
 adam: false
 val: true
-save_dir: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\scripts\training\visdrone\YOLOv5n\phase1-baseline\experiment-1\logs&results\training\phase1_quicktest_exp1_20250813_014210
+save_dir: C:\Users\burak\OneDrive\Desktop\Git-Repos\drone-obj-detect-lightweight-ai\scripts\training\visdrone\YOLOv5n\phase1-baseline\experiment-1\logs&results\training\phase1_baseline_exp1_20250813_021329
