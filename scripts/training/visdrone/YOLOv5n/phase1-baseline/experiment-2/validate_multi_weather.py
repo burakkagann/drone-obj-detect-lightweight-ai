@@ -44,7 +44,7 @@ class MultiWeatherValidator:
     """Multi-weather validation manager for Experiment 2"""
     
     def __init__(self, weights_path: str, conf_thres: float = 0.001, 
-                 iou_thres: float = 0.6, batch_size: int = 16):
+                 iou_thres: float = 0.6, batch_size: int = 8):
         """
         Initialize the multi-weather validator
         
@@ -52,7 +52,7 @@ class MultiWeatherValidator:
             weights_path: Path to model weights
             conf_thres: Confidence threshold for detections
             iou_thres: IoU threshold for NMS
-            batch_size: Batch size for validation
+            batch_size: Batch size for validation (default: 8)
         """
         self.weights_path = Path(weights_path).resolve()
         self.conf_thres = conf_thres
@@ -531,8 +531,8 @@ def main():
                        help='Confidence threshold (default: 0.001)')
     parser.add_argument('--iou-thres', type=float, default=0.6,
                        help='IoU threshold for NMS (default: 0.6)')
-    parser.add_argument('--batch-size', type=int, default=16,
-                       help='Batch size for validation (default: 16)')
+    parser.add_argument('--batch-size', type=int, default=8,
+                       help='Batch size for validation (default: 8)')
     parser.add_argument('--weather-only', action='store_true',
                        help='Only test weather conditions (skip clean)')
     parser.add_argument('--conditions', nargs='+',

@@ -233,7 +233,7 @@ class WeatherTester:
             str(self.yolo_path / "val.py"),
             "--weights", str(self.weights_path),
             "--data", str(temp_data_yaml),
-            "--batch-size", "8",
+            "--batch-size", "4",  # Conservative for weather testing
             "--imgsz", "640",
             "--conf-thres", str(self.conf_thres),
             "--iou-thres", str(self.iou_thres),

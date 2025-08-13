@@ -1,0 +1,17 @@
+{
+  "phase": "2A",
+  "timestamp": "2025-08-13T18:31:36.409567",
+  "status": "success",
+  "duration_hours": 0.26127651969591775,
+  "configuration": {
+    "epochs": 2,
+    "batch_size": 8,
+    "hyp_config": "C:\\Users\\burak\\OneDrive\\Desktop\\Git-Repos\\drone-obj-detect-lightweight-ai\\configs\\yolov5n-visdrone\\experiment2a_phase1_hyp.yaml",
+    "name": "exp2_phase2a_quicktest"
+  },
+  "final_metrics": {
+    "mAP_0.5": null,
+    "precision": null,
+    "recall": null
+  }
+}

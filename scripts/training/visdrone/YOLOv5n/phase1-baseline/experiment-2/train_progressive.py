@@ -39,7 +39,7 @@ LOGS_DIR = SCRIPT_DIR / "logs&results"
 class ProgressiveTrainer:
     """Progressive training manager for Experiment 2"""
     
-    def __init__(self, phase='all', batch_size=16, device='0', quick_test=False):
+    def __init__(self, phase='all', batch_size=8, device='0', quick_test=False):
         self.phase = phase
         self.batch_size = batch_size
         self.device = device
@@ -67,13 +67,13 @@ class ProgressiveTrainer:
                     'hyp': CONFIG_DIR / "experiment2b_phase1_hyp.yaml",
                     'epochs': 2,  # Quick test: 2 epochs
                     'name': 'exp2_phase2b_quicktest',
-                    'resume': 'exp2_phase2a_quicktest'
+                    'resume': '2a'  # Reference to phase key instead of name
                 },
                 '2c': {
                     'hyp': CONFIG_DIR / "experiment2c_phase_hyp.yaml",
                     'epochs': 1,  # Quick test: 1 epoch
                     'name': 'exp2_phase2c_quicktest',
-                    'resume': 'exp2_phase2b_quicktest'
+                    'resume': '2b'  # Reference to phase key instead of name
                 }
             }
         else:
@@ -89,19 +89,24 @@ class ProgressiveTrainer:
                     'hyp': CONFIG_DIR / "experiment2b_phase1_hyp.yaml",
                     'epochs': 40,
                     'name': 'exp2_phase2b',
-                    'resume': 'exp2_phase2a'  # Will be resolved to actual path
+                    'resume': '2a'  # Reference to phase key instead of name
                 },
                 '2c': {
                     'hyp': CONFIG_DIR / "experiment2c_phase_hyp.yaml",
                     'epochs': 30,
                     'name': 'exp2_phase2c',
-                    'resume': 'exp2_phase2b'  # Will be resolved to actual path
+                    'resume': '2b'  # Reference to phase key instead of name
                 }
             }
         
         self.data_config = CONFIG_DIR / "visdrone_experiment2.yaml"
         self.model_config = YOLO_PATH / "models" / "yolov5n.yaml"
         self.pretrained_weights = YOLO_PATH / "yolov5n.pt"
+        
+        # Experiment 1 best weights for Phase 2A (domain-adapted starting point)
+        self.experiment1_weights = (SCRIPT_DIR.parent / "experiment-1" / "logs&results" / 
+                                   "training" / "phase1_baseline_exp1_20250813_021329" / 
+                                   "weights" / "best.pt")
         
         # Results directories
         self.training_dir = LOGS_DIR / "training"
@@ -141,7 +146,8 @@ class ProgressiveTrainer:
             self.yolo_train,
             self.data_config,
             self.model_config,
-            self.pretrained_weights
+            self.pretrained_weights,
+            self.experiment1_weights
         ]
         
         for phase_key, phase_info in self.phase_configs.items():
@@ -177,23 +183,27 @@ class ProgressiveTrainer:
             "--exist-ok",
             "--patience", "30",
             "--save-period", "5",
-            "--workers", "8",
+            "--workers", "2",
             "--rect",  # Rectangular training
-            "--image-weights", "False",  # Disabled for Phase 1
             "--multi-scale",  # Enable multi-scale training
-            "--single-cls", "False",
-            "--quad", "False",
-            "--cos-lr", "True" if phase_key in ['2b', '2c'] else "False",
             "--label-smoothing", "0.0" if phase_key == '2a' else ("0.05" if phase_key == '2b' else "0.1"),
             "--cache", "ram" if self.check_ram_availability() else "disk"
         ]
         
-        # Add weights (pretrained for 2a, resume for 2b/2c)
+        # Add conditional boolean flags (only when True)
+        if phase_key in ['2b', '2c']:
+            cmd.append("--cos-lr")
+        
+        # Note: --image-weights, --single-cls, --quad are False by default in YOLOv5, so we omit them
+        
+        # Add weights (Experiment 1 best for 2a, resume for 2b/2c)
         if phase_key == '2a':
-            cmd.extend(["--weights", str(self.pretrained_weights)])
+            cmd.extend(["--weights", str(self.experiment1_weights)])
+            self.logger.info(f"Using Experiment 1 best weights: {self.experiment1_weights}")
         else:
             # Find the last checkpoint from previous phase
-            prev_phase = self.phase_configs[phase_info['resume']]
+            prev_phase_key = phase_info['resume']  # This is now a phase key like '2a'
+            prev_phase = self.phase_configs[prev_phase_key]
             checkpoint_path = self.training_dir / prev_phase['name'] / "weights" / "last.pt"
             
             if not checkpoint_path.exists():
@@ -210,39 +220,60 @@ class ProgressiveTrainer:
         # Log command
         self.logger.info(f"Training command: {' '.join(cmd)}")
         
-        # Execute training
+        # Execute training with real-time output
         start_time = time.time()
         try:
-            result = subprocess.run(
+            self.logger.info(f"[TRAINING] Starting Phase {phase_key.upper()} with real-time output...")
+            
+            # Run with real-time output streaming
+            process = subprocess.Popen(
                 cmd,
                 cwd=str(YOLO_PATH),
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True,
-                check=True
+                bufsize=1,
+                universal_newlines=True
             )
             
-            # Log output
-            if result.stdout:
-                with open(LOGS_DIR / f"phase_{phase_key}_stdout.log", 'w') as f:
-                    f.write(result.stdout)
+            # Capture output for logging
+            output_lines = []
+            
+            # Stream output in real-time
+            for line in iter(process.stdout.readline, ''):
+                if line:
+                    print(line.rstrip())  # Show in terminal
+                    output_lines.append(line.rstrip())
                     
-            if result.stderr:
-                with open(LOGS_DIR / f"phase_{phase_key}_stderr.log", 'w') as f:
-                    f.write(result.stderr)
-                    
+            process.wait()
+            
             duration = (time.time() - start_time) / 3600
-            self.logger.info(f"Phase {phase_key.upper()} completed successfully in {duration:.2f} hours")
             
-            # Save phase summary
-            self.save_phase_summary(phase_key, duration, "success")
-            
-            return True
-            
-        except subprocess.CalledProcessError as e:
+            if process.returncode == 0:
+                self.logger.info(f"Phase {phase_key.upper()} completed successfully in {duration:.2f} hours")
+                
+                # Save output log
+                with open(LOGS_DIR / f"phase_{phase_key}_output.log", 'w') as f:
+                    f.write('\n'.join(output_lines))
+                
+                # Save phase summary
+                self.save_phase_summary(phase_key, duration, "success")
+                return True
+            else:
+                self.logger.error(f"Phase {phase_key.upper()} failed with return code: {process.returncode}")
+                
+                # Save error log
+                with open(LOGS_DIR / f"phase_{phase_key}_error.log", 'w') as f:
+                    f.write('\n'.join(output_lines))
+                
+                # Save phase summary
+                self.save_phase_summary(phase_key, duration, "failed", f"Return code: {process.returncode}")
+                return False
+                
+        except Exception as e:
+            duration = (time.time() - start_time) / 3600
             self.logger.error(f"Training failed for phase {phase_key}: {str(e)}")
-            if e.stderr:
-                self.logger.error(f"Error output: {e.stderr}")
-            self.save_phase_summary(phase_key, 0, "failed", str(e))
+            self.save_phase_summary(phase_key, duration, "failed", str(e))
             return False
             
     def save_phase_summary(self, phase_key, duration, status, error=None):
@@ -405,8 +436,8 @@ def main():
     parser.add_argument('--phase', type=str, default='all',
                        choices=['2a', '2b', '2c', 'all'],
                        help='Training phase to execute (default: all)')
-    parser.add_argument('--batch-size', type=int, default=16,
-                       help='Batch size for training (default: 16)')
+    parser.add_argument('--batch-size', type=int, default=8,
+                       help='Batch size for training (default: 8)')
     parser.add_argument('--device', type=str, default='0',
                        help='CUDA device (default: 0)')
     parser.add_argument('--quick-test', action='store_true',

@@ -39,7 +39,7 @@ LOGS_DIR = SCRIPT_DIR / "logs&results"
 class Experiment2Runner:
     """Complete experiment runner for Experiment 2"""
     
-    def __init__(self, mode: str = 'full', batch_size: int = 16, 
+    def __init__(self, mode: str = 'full', batch_size: int = 8, 
                  device: str = '0', skip_validation: bool = False,
                  quick_test: bool = False):
         """
@@ -138,8 +138,8 @@ class Experiment2Runner:
             # Stream output in real-time
             for line in iter(process.stdout.readline, ''):
                 if line:
-                    print(line.rstrip())
-                    self.logger.info(line.rstrip())
+                    print(line.rstrip())  # Show in terminal only
+                    # Note: subprocess handles its own logging, avoid duplication
                     
             process.wait()
             
@@ -227,8 +227,8 @@ class Experiment2Runner:
             # Stream output
             for line in iter(process.stdout.readline, ''):
                 if line:
-                    print(line.rstrip())
-                    self.logger.info(line.rstrip())
+                    print(line.rstrip())  # Show in terminal only
+                    # Note: subprocess handles its own logging, avoid duplication
                     
             process.wait()
             
@@ -525,8 +525,8 @@ def main():
     parser.add_argument('--mode', type=str, default='full',
                        choices=['full', 'train', 'test', 'analyze'],
                        help='Execution mode (default: full)')
-    parser.add_argument('--batch-size', type=int, default=16,
-                       help='Batch size for training/testing (default: 16)')
+    parser.add_argument('--batch-size', type=int, default=8,
+                       help='Batch size for training/testing (default: 8)')
     parser.add_argument('--device', type=str, default='0',
                        help='CUDA device (default: 0)')
     parser.add_argument('--skip-validation', action='store_true',
