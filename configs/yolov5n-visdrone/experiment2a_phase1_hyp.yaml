@@ -1,0 +1,43 @@
+# YOLOv5n VisDrone Experiment 2 - Phase 2A Hyperparameters (Epochs 1-30)
+# Foundation Building Phase
+# Optimized for stable feature extraction with no augmentation (Phase 1 constraint)
+
+# Learning Rate Configuration
+lr0: 0.001  # Initial learning rate (SGD) - reduced from 0.01
+lrf: 0.5    # Final OneCycleLR learning rate factor (lr0 * lrf at end of phase)
+momentum: 0.937  # SGD momentum/Adam beta1
+weight_decay: 0.0005  # Optimizer weight decay 5e-4
+warmup_epochs: 5.0  # Warmup epochs for stability
+warmup_momentum: 0.8  # Warmup initial momentum
+warmup_bias_lr: 0.1  # Warmup initial bias lr
+
+# Loss Component Weights (Balanced)
+box: 0.05  # Box loss gain
+cls: 0.5   # Classification loss gain (increased from 0.3)
+cls_pw: 1.0  # Class loss positive weight
+obj: 0.5   # Object loss gain (decreased from 0.7)
+obj_pw: 1.0  # Object loss positive weight
+
+# Anchor Configuration
+anchor_t: 4.0  # Anchor-multiple threshold
+anchors: 3  # Anchors per output layer (0 to ignore)
+
+# Augmentation Settings (DISABLED for Phase 1)
+fl_gamma: 0.0  # Focal loss gamma (efficientDet default gamma=1.5)
+hsv_h: 0.0  # Image HSV-Hue augmentation (fraction)
+hsv_s: 0.0  # Image HSV-Saturation augmentation (fraction)
+hsv_v: 0.0  # Image HSV-Value augmentation (fraction)
+degrees: 0.0  # Image rotation (+/- deg)
+translate: 0.0  # Image translation (+/- fraction)
+scale: 0.0  # Image scale (+/- gain)
+shear: 0.0  # Image shear (+/- deg)
+perspective: 0.0  # Image perspective (+/- fraction), range 0-0.001
+flipud: 0.0  # Image flip up-down (probability)
+fliplr: 0.0  # Image flip left-right (probability)
+mosaic: 0.0  # Image mosaic (probability) - DISABLED
+mixup: 0.0  # Image mixup (probability)
+copy_paste: 0.0  # Segment copy-paste (probability)
+
+# Training Configuration
+label_smoothing: 0.0  # Label smoothing epsilon (0.0 for Phase 2A)
+nbs: 64  # Nominal batch size for normalization

@@ -1,0 +1,41 @@
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# VisDrone Dataset Configuration for Experiment 2
+# Optimized for Phase 1 baseline training with multi-scale support
+
+path: ../data/raw/visdrone  # dataset root dir (relative to yolov5 directory)
+train: images/train  # train images (relative to 'path') 6471 images
+val: images/val  # val images (relative to 'path') 548 images
+test: images/test-dev  # test images (optional) 1610 images
+
+# Classes
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
+
+nc: 10  # number of classes
+
+# Dataset statistics (for reference)
+# train: 6471 images, 343,204 instances (avg 53.0 instances per image)
+# val: 548 images, 24,505 instances (avg 44.7 instances per image)
+# test: 1610 images (for evaluation)
+
+# Download script/URL (optional)
+download: |
+  # Download VisDrone dataset manually from:
+  # https://github.com/VisDrone/VisDrone-Dataset
+  # Or use the automated download script in scripts/data_preparation/
+
+# Dataset characteristics for Experiment 2 optimization
+# - Small objects (avg size ~30x30 pixels)
+# - High object density (40-60 objects per image)
+# - Aerial perspective (drone view)
+# - 10 classes focused on vehicles and people
+# - No weather augmentation (Phase 1 constraint)
